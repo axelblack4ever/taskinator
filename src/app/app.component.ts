@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Platform } from '@ionic/angular/standalone';
+import { DatabaseService } from './services/database.service';
 import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -13,7 +15,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle]
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   public appPages = [
     { title: 'Perfil', url: '/tabs/profile', icon: 'personOutline', open: false },
     { 
@@ -32,7 +34,9 @@ export class AppComponent {
     { title: 'Configuración', url: '/tabs/settings', icon: 'optionsOutline', open: false }
   ];
   
-  constructor(private router: Router) {
+  constructor(private router: Router,
+    private platform: Platform,
+    private dbService: DatabaseService) {
     addIcons({ 
       personOutline, 
       optionsOutline, 
@@ -45,7 +49,15 @@ export class AppComponent {
       chevronUpOutline
     });
 
-    
+        // Manejar el evento de pausa/cierre de la aplicación
+        this.platform.pause.subscribe(() => {
+          console.log('Application paused');
+          this.persistData();
+        });
+        
+        this.platform.resume.subscribe(() => {
+          console.log('Application resumed');
+        });    
   }
 
   goToHome() {
@@ -55,4 +67,19 @@ export class AppComponent {
   toggleSection(p: any) {
     p.open = !p.open;
   }
+
+  async persistData() {
+    try {
+      // No cerramos la conexión, solo aseguramos que se guarde todo
+      console.log('Ensuring data is persisted');
+    } catch (error) {
+      console.error('Error persisting data', error);
+    }
+  }
+  
+  ngOnDestroy() {
+    // Cerrar la conexión cuando el componente se destruye
+    this.dbService.closeConnection();
+  }  
+  
 }

@@ -16,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'settings',
     loadComponent: () => import('src/app/settings/settings.page').then(m => m.SettingsPage)
+  },
+  {
+    path: 'new-task',
+    loadComponent: () => import('./tasks/new-task/new-task.page').then( m => m.NewTaskPage)
   }
 ];

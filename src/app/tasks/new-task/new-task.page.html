@@ -1,0 +1,100 @@
+<!-- src/app/tasks/new-task/new-task.page.html -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/today"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nueva Tarea</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-list>
+    <ion-item>
+      <ion-input 
+        label="Título" 
+        labelPlacement="floating" 
+        placeholder="Ingresa el título de la tarea" 
+        [(ngModel)]="newTask.title"
+        required>
+      </ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-textarea 
+        label="Descripción" 
+        labelPlacement="floating" 
+        placeholder="Descripción de la tarea (opcional)" 
+        [(ngModel)]="newTask.description"
+        autoGrow="true">
+      </ion-textarea>
+    </ion-item>
+    
+    <ion-item>
+      <ion-select 
+        label="Categoría" 
+        labelPlacement="floating"
+        placeholder="Selecciona una categoría"
+        [(ngModel)]="newTask.category_id">
+        <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
+          {{cat.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-item>
+      <ion-icon name="calendarOutline" slot="start"></ion-icon>
+      <ion-label>Fecha de vencimiento</ion-label>
+      <ion-datetime-button datetime="due-date"></ion-datetime-button>
+    </ion-item>
+    
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime 
+          id="due-date" 
+          presentation="date"
+          [(ngModel)]="newTask.due_date">
+        </ion-datetime>
+      </ng-template>
+    </ion-modal>
+    
+    <ion-item>
+      <ion-icon name="flagOutline" slot="start"></ion-icon>
+      <ion-label>Prioridad</ion-label>
+      <ion-select [(ngModel)]="newTask.priority">
+        <ion-select-option [value]="0">Baja</ion-select-option>
+        <ion-select-option [value]="1">Media</ion-select-option>
+        <ion-select-option [value]="2">Alta</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-item>
+      <ion-select 
+        label="Metodología" 
+        labelPlacement="floating"
+        placeholder="Selecciona una metodología (opcional)"
+        [(ngModel)]="newTask.methodology">
+        <ion-select-option value="pomodoro">Pomodoro</ion-select-option>
+        <ion-select-option value="eisenhower">Eisenhower</ion-select-option>
+        <ion-select-option value="eatFrog">Eat the Frog</ion-select-option>
+        <ion-select-option value="three">3/3/3</ion-select-option>
+        <ion-select-option value="seinfeld">Seinfeld</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  
+  <div class="ion-padding">
+    <ion-button expand="block" (click)="saveTask()" [disabled]="isLoading">
+      <ion-icon name="saveOutline" slot="start"></ion-icon>
+      Guardar Tarea
+      <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+    </ion-button>
+  </div>
+  
+  <ion-toast
+    [isOpen]="showToast"
+    [message]="toastMessage"
+    [duration]="2000"
+    (didDismiss)="showToast = false">
+  </ion-toast>
+</ion-content>

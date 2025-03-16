@@ -1,3 +1,4 @@
+// src/app/tabs/tabs.routes.ts
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
@@ -13,6 +14,10 @@ export const routes: Routes = [
       {
         path: 'tasks',
         loadComponent: () => import('../tasks/tasks.page').then(m => m.TasksPage)
+      },
+      {
+        path: 'tasks/new',
+        loadComponent: () => import('../tasks/new-task/new-task.page').then(m => m.NewTaskPage)
       },
       {
         path: 'methodologies',
@@ -47,4 +52,3 @@ export const routes: Routes = [
     pathMatch: 'full'
   }
 ];
-

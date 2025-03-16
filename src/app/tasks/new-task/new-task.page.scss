@@ -1,0 +1,14 @@
+ion-select, ion-input, ion-datetime, ion-textarea {
+    width: 100%;
+  }
+  
+  ion-button ion-spinner {
+    margin-left: 8px;
+  }
+  
+  .warning-message {
+    color: var(--ion-color-danger);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    margin-left: 16px;
+  }
