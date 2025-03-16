@@ -1,0 +1,10 @@
+// src/app/today/today.page.scss
+.completed {
+    text-decoration: line-through;
+    color: var(--ion-color-medium);
+  }
+  
+  ion-badge {
+    margin-right: 5px;
+    margin-top: 8px;
+  }

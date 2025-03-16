@@ -1,0 +1,36 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title (click)="goToHome()" style="cursor: pointer">TASKINATOR</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ng-container *ngFor="let p of appPages">
+            <ion-item *ngIf="!p.children" [routerLink]="[p.url]" detail="false">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+            
+            <ion-item button *ngIf="p.children" (click)="toggleSection(p)" detail="false">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+              <ion-icon slot="end" [name]="p.open ? 'chevronUpOutline' : 'chevronDownOutline'"></ion-icon>
+            </ion-item>
+            
+            <ion-list *ngIf="p.open && p.children">
+              <ion-item *ngFor="let sub of p.children" [routerLink]="[sub.url]" class="submenu-item">
+                <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                <ion-label>{{ sub.title }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ng-container>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>
