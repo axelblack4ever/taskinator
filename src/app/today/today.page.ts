@@ -1,11 +1,7 @@
-// src/app/today/today.page.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { IonRouterOutlet } from '@ionic/angular/standalone'; 
-// Importa los eventos de ciclo de vida
-import { Subscription } from 'rxjs';
 import { 
   IonContent, 
   IonHeader, 
@@ -19,14 +15,8 @@ import {
   IonBadge,
   IonSpinner,
   IonButton,
-  IonCheckbox,
-  IonFab,
-  IonFabButton,
-  IonIcon
+  IonCheckbox
 } from '@ionic/angular/standalone';
-import { DatabaseService } from '../services/database.service';
-import { addIcons } from 'ionicons';
-import { add } from 'ionicons/icons';
 
 @Component({
   selector: 'app-today',
@@ -49,58 +39,42 @@ import { add } from 'ionicons/icons';
     IonBadge,
     IonSpinner,
     IonButton,
-    IonCheckbox,
-    IonFab,
-    IonFabButton,
-    IonIcon
+    IonCheckbox
   ]
 })
 export class TodayPage implements OnInit {
-  todayTasks: any[] = [];
-  isLoading = true;
-  private ionViewWillEnterSubscription: Subscription | undefined;
+  // Datos de ejemplo para mostrar
+  todayTasks: any[] = [
+    {
+      id: 1,
+      title: 'Completar la aplicación Taskinator',
+      description: 'Terminar la implementación de las funcionalidades básicas',
+      category_name: 'Trabajo',
+      category_color: '#33A1FF',
+      completed: 0
+    },
+    {
+      id: 2,
+      title: 'Repasar conceptos de Ionic',
+      description: 'Revisar documentación sobre componentes standalone y routing',
+      category_name: 'Estudios',
+      category_color: '#33FF57',
+      completed: 0
+    }
+  ];
   
-  constructor(private dbService: DatabaseService, private ionRouterOutlet: IonRouterOutlet) {
-    // Registrar los iconos que necesitas usar
-    addIcons({ add });
-  }
+  isLoading = false;
+  
+  constructor() { }
 
   ngOnInit() {
-    this.dbService.isDatabaseReady().subscribe(isReady => {
-      if (isReady) {
-        this.loadTasks();
-      }
-    });
-    // Suscribirse al evento ionViewWillEnter
-    this.ionViewWillEnterSubscription = this.ionRouterOutlet.activateEvents.subscribe(() => {
-      console.log('Today page activated - reloading tasks');
-      this.loadTasks();
-    });    
-  }
-
-  ngOnDestroy() {
-    // Importante: cancela la suscripción para evitar memory leaks
-    if (this.ionViewWillEnterSubscription) {
-      this.ionViewWillEnterSubscription.unsubscribe();
-    }
-  }  
-  
-  async loadTasks() {
-    this.isLoading = true;
-    try {
-      const today = new Date().toISOString().split('T')[0];
-      console.log('Fetching tasks for date:', today);
-      this.todayTasks = await this.dbService.getTasksByDate(today) || [];
-      console.log('Tasks loaded:', this.todayTasks);
-    } catch (error) {
-      console.error('Error al cargar tareas', error);
-    } finally {
-      this.isLoading = false;
-    }
+    console.log('TodayPage initialized');
   }
   
-  async markAsComplete(taskId: number) {
-    await this.dbService.updateTask(taskId, { completed: 1 });
-    await this.loadTasks();
+  markAsComplete(taskId: number) {
+    const task = this.todayTasks.find(t => t.id === taskId);
+    if (task) {
+      task.completed = task.completed === 0 ? 1 : 0;
+    }
   }
 }

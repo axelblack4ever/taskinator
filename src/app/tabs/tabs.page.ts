@@ -1,4 +1,3 @@
-// src/app/tabs/tabs.page.ts
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { 
@@ -11,7 +10,21 @@ import {
   IonFabButton
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { todayOutline, listOutline, optionsOutline, barChartOutline, add } from 'ionicons/icons';
+import { 
+  today, 
+  list, 
+  options, 
+  barChart, 
+  add,
+  // Importar también los del AppComponent para asegurarnos que estén disponibles
+  person, 
+  calendar, 
+  timer, 
+  grid, 
+  nutrition,
+  chevronDown,
+  chevronUp
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -31,12 +44,20 @@ import { todayOutline, listOutline, optionsOutline, barChartOutline, add } from 
 })
 export class TabsPage {
   constructor() {
+    // Registrar todos los iconos necesarios
     addIcons({
-      todayOutline,
-      listOutline,
-      optionsOutline,
-      barChartOutline,
-      add
+      today,
+      list,
+      options,
+      barChart,
+      add,
+      person, 
+      calendar, 
+      timer, 
+      grid, 
+      nutrition,
+      chevronDown,
+      chevronUp
     });
   }
 }

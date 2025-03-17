@@ -1,4 +1,3 @@
-<!-- src/app/tasks/new-task/new-task.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -43,7 +42,7 @@
     </ion-item>
     
     <ion-item>
-      <ion-icon name="calendarOutline" slot="start"></ion-icon>
+      <ion-icon name="calendar" slot="start"></ion-icon>
       <ion-label>Fecha de vencimiento</ion-label>
       <ion-datetime-button datetime="due-date"></ion-datetime-button>
     </ion-item>
@@ -59,7 +58,7 @@
     </ion-modal>
     
     <ion-item>
-      <ion-icon name="flagOutline" slot="start"></ion-icon>
+      <ion-icon name="flag" slot="start"></ion-icon>
       <ion-label>Prioridad</ion-label>
       <ion-select [(ngModel)]="newTask.priority">
         <ion-select-option [value]="0">Baja</ion-select-option>
@@ -85,9 +84,8 @@
   
   <div class="ion-padding">
     <ion-button expand="block" (click)="saveTask()" [disabled]="isLoading">
-      <ion-icon name="saveOutline" slot="start"></ion-icon>
+      <ion-icon name="save" slot="start"></ion-icon>
       Guardar Tarea
-      <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
     </ion-button>
   </div>
   

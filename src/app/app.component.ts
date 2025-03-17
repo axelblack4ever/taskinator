@@ -1,10 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Platform } from '@ionic/angular/standalone';
-import { DatabaseService } from './services/database.service';
+import { Component } from '@angular/core';
 import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { personOutline, optionsOutline, listOutline, calendarOutline, timerOutline, gridOutline, nutritionOutline, chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
+import { person, options, list, calendar, timer, grid, nutrition, chevronDown, chevronUp } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -15,71 +13,45 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle]
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   public appPages = [
-    { title: 'Perfil', url: '/tabs/profile', icon: 'personOutline', open: false },
+    { title: 'Perfil', url: '/tabs/profile', icon: 'person', open: false },
     { 
       title: 'Metodologías', 
-      icon: 'optionsOutline', 
+      icon: 'options', 
       open: false,
       children: [
-        { title: 'Pomodoro', url: '/tabs/methodologies/pomodoro', icon: 'timerOutline' },
-        { title: '3/3/3', url: '/tabs/methodologies/three-three-three', icon: 'listOutline' },
-        { title: 'Eisenhower', url: '/tabs/methodologies/eisenhower', icon: 'gridOutline' },
-        { title: 'Eat the Frog', url: '/tabs/methodologies/eat-frog', icon: 'nutritionOutline' },
-        { title: 'Seinfeld', url: '/tabs/methodologies/seinfeld', icon: 'calendarOutline' },
+        { title: 'Pomodoro', url: '/tabs/methodologies/pomodoro', icon: 'timer' },
+        { title: '3/3/3', url: '/tabs/methodologies/three-three-three', icon: 'list' },
+        { title: 'Eisenhower', url: '/tabs/methodologies/eisenhower', icon: 'grid' },
+        { title: 'Eat the Frog', url: '/tabs/methodologies/eat-frog', icon: 'nutrition' },
+        { title: 'Seinfeld', url: '/tabs/methodologies/seinfeld', icon: 'calendar' },
       ]
     },
-    { title: 'Categorías y Etiquetas', url: '/tabs/categories', icon: 'listOutline', open: false },
-    { title: 'Configuración', url: '/tabs/settings', icon: 'optionsOutline', open: false }
+    { title: 'Categorías y Etiquetas', url: '/tabs/categories', icon: 'list', open: false },
+    { title: 'Configuración', url: '/tabs/settings', icon: 'options', open: false }
   ];
   
-  constructor(private router: Router,
-    private platform: Platform,
-    private dbService: DatabaseService) {
+  constructor(private router: Router) {
+    // Registrar los iconos sin el sufijo "Outline"
     addIcons({ 
-      personOutline, 
-      optionsOutline, 
-      listOutline, 
-      calendarOutline, 
-      timerOutline, 
-      gridOutline, 
-      nutritionOutline,
-      chevronDownOutline,
-      chevronUpOutline
+      person, 
+      options, 
+      list, 
+      calendar, 
+      timer, 
+      grid, 
+      nutrition,
+      chevronDown,
+      chevronUp
     });
-
-        // Manejar el evento de pausa/cierre de la aplicación
-        this.platform.pause.subscribe(() => {
-          console.log('Application paused');
-          this.persistData();
-        });
-        
-        this.platform.resume.subscribe(() => {
-          console.log('Application resumed');
-        });    
   }
-
-  goToHome() {
-    this.router.navigateByUrl('/tabs/today');
-}
 
   toggleSection(p: any) {
     p.open = !p.open;
   }
-
-  async persistData() {
-    try {
-      // No cerramos la conexión, solo aseguramos que se guarde todo
-      console.log('Ensuring data is persisted');
-    } catch (error) {
-      console.error('Error persisting data', error);
-    }
+  
+  goToHome() {
+    this.router.navigateByUrl('/tabs/today');
   }
-  
-  ngOnDestroy() {
-    // Cerrar la conexión cuando el componente se destruye
-    this.dbService.closeConnection();
-  }  
-  
 }

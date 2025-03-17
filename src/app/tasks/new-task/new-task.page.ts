@@ -1,7 +1,6 @@
-// src/app/tasks/new-task/new-task.page.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { 
   IonContent, 
@@ -21,13 +20,11 @@ import {
   IonDatetimeButton,
   IonModal,
   IonButton,
-  IonSpinner,
   IonToast,
   IonIcon
 } from '@ionic/angular/standalone';
-import { DatabaseService } from '../../services/database.service';
 import { addIcons } from 'ionicons';
-import { calendarOutline, flagOutline, saveOutline } from 'ionicons/icons';
+import { calendar, flag, save } from 'ionicons/icons';
 
 @Component({
   selector: 'app-new-task',
@@ -37,7 +34,6 @@ import { calendarOutline, flagOutline, saveOutline } from 'ionicons/icons';
   imports: [
     CommonModule, 
     FormsModule,
-    ReactiveFormsModule,
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -55,7 +51,6 @@ import { calendarOutline, flagOutline, saveOutline } from 'ionicons/icons';
     IonDatetimeButton,
     IonModal,
     IonButton,
-    IonSpinner,
     IonToast,
     IonIcon
   ]
@@ -71,31 +66,30 @@ export class NewTaskPage implements OnInit {
     methodology: null as string | null
   };
   
-  categories: any[] = [];
+  // Datos de ejemplo para categorías
+  categories: any[] = [
+    { id: 1, name: 'Personal', color: '#FF5733' },
+    { id: 2, name: 'Trabajo', color: '#33A1FF' },
+    { id: 3, name: 'Estudios', color: '#33FF57' }
+  ];
+  
   isLoading = false;
   showToast = false;
   toastMessage = '';
   
-  constructor(
-    private dbService: DatabaseService,
-    private router: Router
-  ) {
+  constructor(private router: Router) {
     addIcons({
-      calendarOutline,
-      flagOutline,
-      saveOutline
+      calendar,
+      flag,
+      save
     });
   }
 
   ngOnInit() {
-    this.loadCategories();
+    console.log('NewTaskPage initialized');
   }
   
-  async loadCategories() {
-    this.categories = await this.dbService.getAllCategories();
-  }
-  
-  async saveTask() {
+  saveTask() {
     if (!this.newTask.title.trim()) {
       this.toastMessage = 'El título es obligatorio';
       this.showToast = true;
@@ -104,22 +98,16 @@ export class NewTaskPage implements OnInit {
     
     this.isLoading = true;
     
-    try {
-      await this.dbService.addTask(this.newTask);
+    // Simulamos el guardado
+    setTimeout(() => {
+      this.isLoading = false;
       this.toastMessage = 'Tarea creada correctamente';
       this.showToast = true;
       
-      // Navegar a la página anterior y forzar recarga
+      // Navegar a la página anterior
       setTimeout(() => {
         this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
       }, 1500);
-      
-    } catch (error) {
-      console.error('Error al guardar la tarea', error);
-      this.toastMessage = 'Error al guardar la tarea';
-      this.showToast = true;
-    } finally {
-      this.isLoading = false;
-    }
+    }, 1000);
   }
 }
