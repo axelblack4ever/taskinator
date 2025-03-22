@@ -41,11 +41,23 @@
       </ion-select>
     </ion-item>
     
-    <ion-item>
-      <ion-icon name="calendar" slot="start"></ion-icon>
-      <ion-label>Fecha de vencimiento</ion-label>
-      <ion-datetime-button datetime="due-date"></ion-datetime-button>
-    </ion-item>
+    <div class="ion-padding-vertical date-priority-container">
+      <ion-item class="date-item">
+        <ion-icon name="calendar" slot="start"></ion-icon>
+        <ion-label>Fecha</ion-label>
+        <ion-datetime-button datetime="due-date"></ion-datetime-button>
+      </ion-item>
+      
+      <ion-item class="priority-item">
+        <ion-icon name="flag" slot="start"></ion-icon>
+        <ion-label>Prioridad</ion-label>
+        <ion-select [(ngModel)]="newTask.priority">
+          <ion-select-option [value]="0">Baja</ion-select-option>
+          <ion-select-option [value]="1">Media</ion-select-option>
+          <ion-select-option [value]="2">Alta</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
     
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
@@ -57,28 +69,91 @@
       </ng-template>
     </ion-modal>
     
-    <ion-item>
-      <ion-icon name="flag" slot="start"></ion-icon>
-      <ion-label>Prioridad</ion-label>
-      <ion-select [(ngModel)]="newTask.priority">
-        <ion-select-option [value]="0">Baja</ion-select-option>
-        <ion-select-option [value]="1">Media</ion-select-option>
-        <ion-select-option [value]="2">Alta</ion-select-option>
+    <!-- TIPO DE TAREA -->
+    <ion-item class="ion-margin-bottom">
+      <ion-select 
+        label="Tipo de tarea" 
+        labelPlacement="floating"
+        placeholder="Selecciona un tipo de tarea"
+        [(ngModel)]="newTask.task_type">
+        <div slot="label">
+          Tipo de tarea
+          <ion-icon name="information-circle" id="task-type-info"></ion-icon>
+        </div>
+        <ion-select-option *ngFor="let type of taskTypes" [value]="type.value">
+          <ion-icon [name]="type.icon"></ion-icon> {{type.label}}
+        </ion-select-option>
       </ion-select>
     </ion-item>
     
+    <ion-popover trigger="task-type-info" triggerAction="click">
+      <ng-template>
+        <ion-content class="ion-padding">
+          <h4>Tipos de tarea</h4>
+          <div *ngFor="let type of taskTypes" class="ion-margin-bottom">
+            <strong><ion-icon [name]="type.icon"></ion-icon> {{type.label}}:</strong>
+            <p>{{type.description}}</p>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    
+    <!-- ATRIBUTOS OPCIONALES EN LA MISMA LÍNEA -->
+    <div class="ion-padding-vertical checkbox-container">
+      <ion-item lines="none" class="checkbox-item">
+        <ion-label>Marcar como importante</ion-label>
+        <ion-checkbox [(ngModel)]="newTask.isImportant" slot="end"></ion-checkbox>
+      </ion-item>
+      
+      <ion-item lines="none" class="checkbox-item">
+        <ion-label>
+          Marcar como "frog"
+          <ion-icon id="frog-info" name="information-circle"></ion-icon>
+        </ion-label>
+        <ion-checkbox [(ngModel)]="newTask.isFrog" slot="end"></ion-checkbox>
+      </ion-item>
+    </div>
+    
+    <ion-popover trigger="frog-info" triggerAction="click">
+      <ng-template>
+        <ion-content class="ion-padding">
+          <h4>¿Qué es un "frog"?</h4>
+          <p>En la metodología "Eat the Frog", un "frog" representa la tarea más difícil o menos agradable del día, que generalmente postergamos.</p>
+          <p>Marcar una tarea como "frog" significa que es prioritaria y debería abordarse primero.</p>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
+    
+    <!-- CATEGORÍA DE RELACIÓN -->
     <ion-item>
       <ion-select 
-        label="Metodología" 
+        label="Categoría" 
         labelPlacement="floating"
-        placeholder="Selecciona una metodología (opcional)"
-        [(ngModel)]="newTask.methodology">
-        <ion-select-option value="pomodoro">Pomodoro</ion-select-option>
-        <ion-select-option value="eisenhower">Eisenhower</ion-select-option>
-        <ion-select-option value="eatFrog">Eat the Frog</ion-select-option>
-        <ion-select-option value="three">3/3/3</ion-select-option>
+        placeholder="Selecciona una categoría (opcional)"
+        [(ngModel)]="newTask.relation_category">
+        <ion-select-option *ngFor="let cat of relationCategories" [value]="cat.value">
+          {{cat.label}}
+        </ion-select-option>
       </ion-select>
     </ion-item>
+    
+    <!-- ETIQUETAS -->
+    <ion-item>
+      <ion-label class="ion-padding-bottom">Etiquetas:</ion-label>
+    </ion-item>
+    
+    <div class="ion-padding-horizontal">
+      <ion-chip 
+        *ngFor="let tag of availableTags" 
+        [color]="isTagSelected(tag.value) ? 'primary' : 'medium'"
+        (click)="toggleTag(tag.value)">
+        <ion-icon [name]="tag.icon"></ion-icon>
+        <ion-label>{{tag.label}}</ion-label>
+        <ion-icon name="checkmark" *ngIf="isTagSelected(tag.value)"></ion-icon>
+      </ion-chip>
+    </div>
+    
+    <!-- Se ha eliminado la sección de metodología -->
   </ion-list>
   
   <div class="ion-padding">
