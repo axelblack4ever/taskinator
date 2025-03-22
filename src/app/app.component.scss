@@ -1,13 +1,16 @@
-ion-item {
-    cursor: pointer;
-    &:hover {
-      --background: rgba(var(--ion-color-primary-rgb), 0.1);
-    }
-  };
-.submenu-item {
-    ion-label {
-      font-size: smaller;
-      font-style: italic;
-      padding-left: 1.5em;
-    }
+// src/app/app.component.scss
+ion-item.submenu-item {
+  --padding-start: 40px; // Aumenta el padding para crear el efecto de tabulación
+  
+  ion-icon {
+    margin-left: 16px; // Desplaza el icono hacia la derecha
   }
+}
+
+// Estilo para el efecto hover en todos los elementos del menú
+ion-item {
+  cursor: pointer;
+  &:hover {
+    --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  }
+}

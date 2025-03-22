@@ -38,7 +38,23 @@ export const routes: Routes = [
       {
         path: 'settings',
         loadComponent: () => import('../settings/settings.page').then(m => m.SettingsPage)
-      },       
+      },
+      // {
+      //   path: 'methodologies/pomodoro',
+      //   loadComponent: () => import('../methodologies/pomodoro/pomodoro.page').then(m => m.PomodoroPage)
+      // },
+      // {
+      //   path: 'methodologies/three-three-three',
+      //   loadComponent: () => import('../methodologies/three-three-three/three-three-three.page').then(m => m.ThreeThreeThreePage)
+      // },
+      // {
+      //   path: 'methodologies/eisenhower',
+      //   loadComponent: () => import('../methodologies/eisenhower/eisenhower.page').then(m => m.EisenhowerPage)
+      // },
+      // {
+      //   path: 'methodologies/eat-frog',
+      //   loadComponent: () => import('../methodologies/eat-frog/eat-frog.page').then(m => m.EatFrogPage)
+      // },
       {
         path: '',
         redirectTo: '/tabs/today',
