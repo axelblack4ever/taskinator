@@ -14,3 +14,20 @@ ion-item {
     --background: rgba(var(--ion-color-primary-rgb), 0.1);
   }
 }
+
+// MODIFICACION DE CODIGO
+// Estilos específicos para los diferentes tipos de elementos del menú
+.category-icon {
+  color: var(--ion-color-primary);
+}
+
+.tag-icon {
+  color: var(--ion-color-secondary);
+}
+
+// Efecto visual para destacar elementos del menú activo
+ion-item.selected-item {
+  --background: rgba(var(--ion-color-primary-rgb), 0.15);
+  font-weight: 500;
+}
+// MODIFICACION DE CODIGO
