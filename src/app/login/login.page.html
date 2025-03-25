@@ -1,0 +1,137 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">
+          <h1>Taskinator</h1>
+          <p *ngIf="currentMode === 'login'">Inicia sesión en tu cuenta</p>
+          <p *ngIf="currentMode === 'register'">Crea tu cuenta</p>
+          <p *ngIf="currentMode === 'reset'">Recupera tu contraseña</p>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <!-- Formulario de Inicio de Sesión -->
+        <form *ngIf="currentMode === 'login'" [formGroup]="loginForm" (ngSubmit)="login()">
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </ion-note>
+          <ion-note color="danger" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')">
+            Introduce un email válido
+          </ion-note>
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria
+          </ion-note>
+
+          <div class="ion-text-end ion-margin-top">
+            <ion-button fill="clear" size="small" (click)="switchMode('reset')">
+              ¿Olvidaste tu contraseña?
+            </ion-button>
+          </div>
+
+          <ion-button expand="block" type="submit" [disabled]="loginForm.invalid || isLoading" class="ion-margin-top">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Iniciar Sesión</span>
+          </ion-button>
+
+          <div class="ion-text-center ion-margin-top">
+            <p>¿No tienes cuenta?</p>
+            <ion-button fill="clear" (click)="switchMode('register')">
+              Regístrate
+            </ion-button>
+          </div>
+        </form>
+
+        <!-- Formulario de Registro -->
+        <form *ngIf="currentMode === 'register'" [formGroup]="registerForm" (ngSubmit)="register()">
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input type="text" formControlName="name"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')">
+            El nombre es obligatorio
+          </ion-note>
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </ion-note>
+          <ion-note color="danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')">
+            Introduce un email válido
+          </ion-note>
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')">
+            La contraseña es obligatoria
+          </ion-note>
+          <ion-note color="danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')">
+            La contraseña debe tener al menos 6 caracteres
+          </ion-note>
+
+          <ion-item class="ion-margin-top">
+            <ion-label position="floating">Confirmar contraseña</ion-label>
+            <ion-input type="password" formControlName="confirmPassword"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('required')">
+            Debes confirmar la contraseña
+          </ion-note>
+          <ion-note color="danger" *ngIf="registerForm.hasError('notSame') && registerForm.get('confirmPassword')?.touched">
+            Las contraseñas no coinciden
+          </ion-note>
+
+          <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || isLoading" class="ion-margin-top">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Registrarse</span>
+          </ion-button>
+
+          <div class="ion-text-center ion-margin-top">
+            <p>¿Ya tienes cuenta?</p>
+            <ion-button fill="clear" (click)="switchMode('login')">
+              Iniciar sesión
+            </ion-button>
+          </div>
+        </form>
+
+        <!-- Formulario de Restablecimiento de Contraseña -->
+        <form *ngIf="currentMode === 'reset'" [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+          <ion-note color="danger" *ngIf="resetPasswordForm.get('email')?.touched && resetPasswordForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </ion-note>
+          <ion-note color="danger" *ngIf="resetPasswordForm.get('email')?.touched && resetPasswordForm.get('email')?.hasError('email')">
+            Introduce un email válido
+          </ion-note>
+
+          <ion-button expand="block" type="submit" [disabled]="resetPasswordForm.invalid || isLoading" class="ion-margin-top">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Restablecer contraseña</span>
+          </ion-button>
+
+          <div class="ion-text-center ion-margin-top">
+            <ion-button fill="clear" (click)="switchMode('login')">
+              Volver a iniciar sesión
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

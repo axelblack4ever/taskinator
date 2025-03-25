@@ -1,10 +1,33 @@
 // src/app/today/today.page.scss
 .completed {
-    text-decoration: line-through;
-    color: var(--ion-color-medium);
-  }
-  
-  ion-badge {
-    margin-right: 5px;
-    margin-top: 8px;
-  }
+  text-decoration: line-through;
+  color: var(--ion-color-medium);
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+ion-badge {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+// Estilos para tareas con prioridad
+.priority-high {
+  border-left: 4px solid var(--ion-color-danger);
+}
+
+.priority-medium {
+  border-left: 4px solid var(--ion-color-warning);
+}
+
+.priority-low {
+  border-left: 4px solid var(--ion-color-success);
+}

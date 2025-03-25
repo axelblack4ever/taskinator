@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Hoy</ion-title>
@@ -29,11 +33,23 @@
       <ion-label>
         <h2 [class.completed]="task.completed">{{ task.title }}</h2>
         <p>{{ task.description }}</p>
-        <ion-badge *ngIf="task.category_name" [style.background]="task.category_color">
-          {{ task.category_name }}
-        </ion-badge>
+        <div class="tag-container">
+          <ion-badge *ngIf="task.category?.name" [style.background]="task.category?.color">
+            {{ task.category?.name }}
+          </ion-badge>
+          <ion-badge *ngIf="task.is_important" color="warning" class="ml-5">
+            Importante
+          </ion-badge>
+          <ion-badge *ngIf="task.is_frog" color="success" class="ml-5">
+            Frog
+          </ion-badge>
+        </div>
       </ion-label>
-      <ion-checkbox slot="end" [checked]="task.completed === 1" (ionChange)="markAsComplete(task.id)"></ion-checkbox>
+        <ion-checkbox 
+          slot="end" 
+          [checked]="!!task.completed" 
+          (ionChange)="task.id && markAsComplete(task.id)">
+      </ion-checkbox>
     </ion-item>
   </ion-list>
 </ion-content>

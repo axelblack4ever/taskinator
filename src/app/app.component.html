@@ -1,13 +1,23 @@
 <!-- src/app/app.component.html -->
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" *ngIf="isAuthenticated">
       <ion-header>
         <ion-toolbar>
           <ion-title (click)="goToHome()" style="cursor: pointer">TASKINATOR</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
+        <!-- Información del usuario -->
+        <div class="user-info ion-padding">
+          <ion-item lines="none">
+            <ion-icon slot="start" name="person"></ion-icon>
+            <ion-label>
+              <h2>{{ userName || 'Usuario' }}</h2>
+            </ion-label>
+          </ion-item>
+        </div>
+        
         <ion-list>
           <ng-container *ngFor="let p of appPages">
             <ion-item *ngIf="!p.children" [routerLink]="[p.url]" detail="false">
@@ -28,6 +38,12 @@
               </ion-item>
             </ion-list>
           </ng-container>
+          
+          <!-- Botón para cerrar sesión -->
+          <ion-item button (click)="logout()" detail="false" class="logout-item">
+            <ion-icon slot="start" name="log-out"></ion-icon>
+            <ion-label>Cerrar Sesión</ion-label>
+          </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>

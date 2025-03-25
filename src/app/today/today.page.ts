@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,8 +15,14 @@ import {
   IonBadge,
   IonSpinner,
   IonButton,
-  IonCheckbox
+  IonCheckbox,
+  IonRefresher,
+  IonRefresherContent,
+  ToastController
 } from '@ionic/angular/standalone';
+import { TaskService } from '../services/task.service';
+import { TaskDetailResponse } from '../models/task.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-today',
@@ -39,42 +45,88 @@ import {
     IonBadge,
     IonSpinner,
     IonButton,
-    IonCheckbox
+    IonCheckbox,
+    IonRefresher,
+    IonRefresherContent
   ]
 })
-export class TodayPage implements OnInit {
-  // Datos de ejemplo para mostrar
-  todayTasks: any[] = [
-    {
-      id: 1,
-      title: 'Completar la aplicación Taskinator',
-      description: 'Terminar la implementación de las funcionalidades básicas',
-      category_name: 'Trabajo',
-      category_color: '#33A1FF',
-      completed: 0
-    },
-    {
-      id: 2,
-      title: 'Repasar conceptos de Ionic',
-      description: 'Revisar documentación sobre componentes standalone y routing',
-      category_name: 'Estudios',
-      category_color: '#33FF57',
-      completed: 0
-    }
-  ];
-  
+export class TodayPage implements OnInit, OnDestroy {
+  todayTasks: TaskDetailResponse[] = [];
   isLoading = false;
+  private subscriptions: Subscription[] = [];
   
-  constructor() { }
+  constructor(
+    private taskService: TaskService,
+    private toastController: ToastController
+  ) { }
 
   ngOnInit() {
-    console.log('TodayPage initialized');
+    // Suscribirse a los cambios en las tareas de hoy
+    this.subscriptions.push(
+      this.taskService.todayTasks$.subscribe(tasks => {
+        this.todayTasks = tasks;
+      })
+    );
+    
+    // Suscribirse al estado de carga
+    this.subscriptions.push(
+      this.taskService.loading$.subscribe(loading => {
+        this.isLoading = loading;
+      })
+    );
+    
+    // Cargar las tareas de hoy
+    this.loadTodayTasks();
   }
   
-  markAsComplete(taskId: number) {
+  ngOnDestroy() {
+    // Limpiar suscripciones al destruir el componente
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+  
+  async loadTodayTasks() {
+    try {
+      await this.taskService.loadTodayTasks();
+    } catch (error) {
+      console.error('Error cargando tareas de hoy:', error);
+      this.showToast('Error al cargar las tareas');
+    }
+  }
+  
+  async doRefresh(event: any) {
+    try {
+      await this.taskService.loadTodayTasks();
+    } catch (error) {
+      console.error('Error actualizando tareas:', error);
+      this.showToast('Error al actualizar las tareas');
+    } finally {
+      event.target.complete();
+    }
+  }
+  
+  async markAsComplete(taskId: number) {
+    if (taskId === undefined) return;
+    
     const task = this.todayTasks.find(t => t.id === taskId);
     if (task) {
-      task.completed = task.completed === 0 ? 1 : 0;
+      try {
+        // Determinar el nuevo estado - la negación del estado actual
+        const newCompletedState = !task.completed;
+        
+        await this.taskService.toggleTaskCompletion(taskId, newCompletedState);
+      } catch (error) {
+        console.error('Error actualizando tarea:', error);
+        this.showToast('Error al actualizar la tarea');
+      }
     }
+  }
+  
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color: 'danger'
+    });
+    toast.present();
   }
 }

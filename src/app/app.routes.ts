@@ -1,24 +1,41 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { authGuard, publicGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.routes').then(m => m.routes)
+    loadChildren: () => import('./tabs/tabs.routes').then(m => m.routes),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login.page').then(m => m.LoginPage),
+    canActivate: [publicGuard]
   },
   {
     path: 'profile',
-    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
+    canActivate: [authGuard]
   },
   {
     path: 'categories',
-    loadComponent: () => import('./categories/categories.page').then( m => m.CategoriesPage)
+    loadComponent: () => import('./categories/categories.page').then(m => m.CategoriesPage),
+    canActivate: [authGuard]
   },
   {
     path: 'settings',
-    loadComponent: () => import('src/app/settings/settings.page').then(m => m.SettingsPage)
+    loadComponent: () => import('./settings/settings.page').then(m => m.SettingsPage),
+    canActivate: [authGuard]
   },
   {
     path: 'new-task',
-    loadComponent: () => import('./tasks/new-task/new-task.page').then( m => m.NewTaskPage)
+    loadComponent: () => import('./tasks/new-task/new-task.page').then(m => m.NewTaskPage),
+    canActivate: [authGuard]
+  },
+  // Ruta de comodín para redirigir al inicio de sesión
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];

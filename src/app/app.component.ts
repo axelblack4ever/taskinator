@@ -1,5 +1,5 @@
 // src/app/app.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle } from '@ionic/angular/standalone';
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -15,7 +15,6 @@ import {
   chevronDown, 
   chevronUp,
   albums,
-  // MODIFICACION DE CODIGO
   alertCircle,    // Para "Eat the Frog"
   pricetag,       // Para Etiquetas
   folder,         // Para Categorías
@@ -25,10 +24,12 @@ import {
   people,         // Para Hijos, Familia, Amigos y etiqueta Relaciones personales
   school,         // Para la etiqueta Desarrollo personal
   briefcase,      // Para la etiqueta Trabajo
-  // MODIFICACION DE CODIGO
+  logOut          // Icono para cerrar sesión
 } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,11 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle]
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
+  isAuthenticated = false;
+  userName = '';
+  private subscriptions: Subscription[] = [];
+  
   // MODIFICACION DE CODIGO
   public appPages = [
     { title: 'Perfil', url: '/tabs/profile', icon: 'person', open: false },
@@ -81,7 +86,10 @@ export class AppComponent {
   ];
   // MODIFICACION DE CODIGO
   
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
     // MODIFICACION DE CODIGO
     addIcons({ 
       person, 
@@ -103,9 +111,35 @@ export class AppComponent {
       cash,
       people,
       school,
-      briefcase
+      briefcase,
+      logOut
     });
     // MODIFICACION DE CODIGO
+  }
+
+  ngOnInit() {
+    // Suscribirse al estado de autenticación
+    this.subscriptions.push(
+      this.authService.isAuthenticated().subscribe(isAuth => {
+        this.isAuthenticated = isAuth;
+      })
+    );
+
+    // Obtener datos del usuario
+    this.subscriptions.push(
+      this.authService.currentUser$.subscribe(user => {
+        if (user && user.user_metadata) {
+          this.userName = user.user_metadata.name || user.email || '';
+        } else {
+          this.userName = '';
+        }
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    // Limpiar suscripciones
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   toggleSection(p: any) {
@@ -114,5 +148,14 @@ export class AppComponent {
   
   goToHome() {
     this.router.navigateByUrl('/tabs/today');
+  }
+
+  async logout() {
+    try {
+      await this.authService.signOut();
+      this.router.navigateByUrl('/login');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   }
 }

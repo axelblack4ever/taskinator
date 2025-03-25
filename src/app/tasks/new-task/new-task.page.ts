@@ -34,9 +34,9 @@ import {
   save, 
   informationCircle, 
   checkmark,
-  businessOutline,
-  rocketOutline,
-  constructOutline,
+  business,
+  rocket,
+  construct,
   alertCircleOutline,
   heart,
   cash,
@@ -106,19 +106,19 @@ export class NewTaskPage implements OnInit {
     { 
       value: 'deep_work', 
       label: 'Trabajo Profundo',
-      icon: 'businessOutline',
+      icon: 'business',
       description: 'Tareas que requieren alta concentración, creatividad y esfuerzo mental sostenido. Enfocado en proyectos de largo plazo y resultados significativos.'
     },
     { 
       value: 'impulse', 
       label: 'Tareas de Impulso',
-      icon: 'rocketOutline',
+      icon: 'rocket',
       description: 'Acciones que generan avances tangibles y respuestas inmediatas. Enfocado en el progreso diario y la resolución de problemas puntuales.'
     },
     { 
       value: 'maintenance', 
       label: 'Mantenimiento',
-      icon: 'constructOutline',
+      icon: 'construct',
       description: 'Tareas rutinarias y administrativas que mantienen el flujo de trabajo. Enfocado en la organización, la comunicación y la gestión de tareas menores.'
     }
   ];
@@ -153,9 +153,9 @@ export class NewTaskPage implements OnInit {
       save,
       informationCircle,
       checkmark,
-      businessOutline,
-      rocketOutline,
-      constructOutline,
+      business,
+      rocket,
+      construct,
       alertCircleOutline,
       heart,
       cash,
