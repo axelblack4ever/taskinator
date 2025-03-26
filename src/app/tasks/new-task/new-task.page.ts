@@ -25,7 +25,8 @@ import {
   IonIcon,
   IonCheckbox,
   IonChip,
-  IonPopover
+  IonPopover,
+  IonSpinner
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -36,14 +37,11 @@ import {
   checkmark,
   business,
   rocket,
-  construct,
-  alertCircleOutline,
-  heart,
-  cash,
-  people,
-  school,
-  briefcase
+  construct
 } from 'ionicons/icons';
+import { TaskService } from '../../services/task.service';
+import { ErrorService } from '../../services/error.service';
+import { CreateTaskRequest, TaskPriority, TaskType } from '../../models/task.model';
 
 @Component({
   selector: 'app-new-task',
@@ -74,7 +72,8 @@ import {
     IonIcon,
     IonCheckbox,
     IonChip,
-    IonPopover
+    IonPopover,
+    IonSpinner
   ]
 })
 export class NewTaskPage implements OnInit {
@@ -85,20 +84,20 @@ export class NewTaskPage implements OnInit {
     category_id: null as number | null,
     due_date: new Date().toISOString().split('T')[0],
     priority: 0,
-    // Se ha eliminado el campo methodology
-    // Nuevos campos
     task_type: null as string | null,
-    isFrog: false,
     isImportant: false,
-    relation_category: null as string | null,
+    isFrog: false,
     tags: [] as string[]
   };
   
-  // Datos de ejemplo para categorías
+  // Datos de ejemplo para categorías - en un caso real, vendrían de un servicio
   categories: any[] = [
     { id: 1, name: 'Personal', color: '#FF5733' },
     { id: 2, name: 'Trabajo', color: '#33A1FF' },
-    { id: 3, name: 'Estudios', color: '#33FF57' }
+    { id: 3, name: 'Estudios', color: '#33FF57' },
+    { id: 4, name: 'Familia', color: '#8A33FF' },
+    { id: 5, name: 'Amigos', color: '#FF33A8' },
+    { id: 6, name: 'Pareja', color: '#FF3355' }
   ];
 
   // Tipos de tarea con descripciones
@@ -123,30 +122,24 @@ export class NewTaskPage implements OnInit {
     }
   ];
 
-  // Categorías de relaciones
-  relationCategories = [
-    { value: 'personal', label: 'Personal' },
-    { value: 'partner', label: 'Pareja' },
-    { value: 'children', label: 'Hijos' },
-    { value: 'family', label: 'Familia' },
-    { value: 'friends', label: 'Amigos' },
-    { value: 'others', label: 'Otros' }
-  ];
-
   // Etiquetas disponibles
   availableTags = [
-    { value: 'health', label: 'Salud', icon: 'heart' },
-    { value: 'finances', label: 'Finanzas', icon: 'cash' },
-    { value: 'relationships', label: 'Relaciones personales', icon: 'people' },
-    { value: 'personal_growth', label: 'Desarrollo personal', icon: 'school' },
-    { value: 'work', label: 'Trabajo', icon: 'briefcase' }
+    { value: 'health', label: 'Salud' },
+    { value: 'finances', label: 'Finanzas' },
+    { value: 'relationships', label: 'Relaciones personales' },
+    { value: 'personal_growth', label: 'Desarrollo personal' },
+    { value: 'work', label: 'Trabajo' }
   ];
   
   isLoading = false;
   showToast = false;
   toastMessage = '';
   
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private taskService: TaskService,
+    private errorService: ErrorService
+  ) {
     addIcons({
       calendar,
       flag,
@@ -155,21 +148,16 @@ export class NewTaskPage implements OnInit {
       checkmark,
       business,
       rocket,
-      construct,
-      alertCircleOutline,
-      heart,
-      cash,
-      people,
-      school,
-      briefcase
+      construct
     });
   }
 
   ngOnInit() {
     console.log('NewTaskPage initialized');
+    // Aquí cargaríamos las categorías desde un servicio de categorías
   }
   
-  saveTask() {
+  async saveTask() {
     if (!this.newTask.title.trim()) {
       this.toastMessage = 'El título es obligatorio';
       this.showToast = true;
@@ -178,9 +166,23 @@ export class NewTaskPage implements OnInit {
     
     this.isLoading = true;
     
-    // Simulamos el guardado
-    setTimeout(() => {
-      this.isLoading = false;
+    try {
+      // Convertir los datos del formulario al formato requerido por el servicio
+      const taskRequest: CreateTaskRequest = {
+        title: this.newTask.title,
+        description: this.newTask.description || undefined,
+        due_date: this.newTask.due_date,
+        priority: this.newTask.priority as TaskPriority,
+        category_id: this.newTask.category_id || undefined,
+        task_type: this.newTask.task_type as TaskType || undefined,
+        is_important: this.newTask.isImportant,
+        is_frog: this.newTask.isFrog,
+        tags: this.newTask.tags.length > 0 ? this.newTask.tags : undefined
+      };
+      
+      // Guardar la tarea utilizando el servicio
+      const createdTask = await this.taskService.createTask(taskRequest);
+      
       this.toastMessage = 'Tarea creada correctamente';
       this.showToast = true;
       
@@ -188,7 +190,13 @@ export class NewTaskPage implements OnInit {
       setTimeout(() => {
         this.router.navigateByUrl('/tabs/today', { replaceUrl: true });
       }, 1500);
-    }, 1000);
+      
+    } catch (error) {
+      // El error ya ha sido manejado en el servicio, no necesitamos hacer nada más aquí
+      console.error('Error al crear la tarea:', error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   toggleTag(tagValue: string) {

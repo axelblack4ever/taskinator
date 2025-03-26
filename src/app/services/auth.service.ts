@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { SupabaseService } from './supabase.service';
+import { ErrorService } from './error.service';
 
 export interface AuthUser {
   id: string;
@@ -39,7 +40,8 @@ export class AuthService {
   
   constructor(
     private supabase: SupabaseService,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) {
     // Inicializar el estado de autenticación
     this.initializeAuth();
@@ -75,7 +77,8 @@ export class AuthService {
       
       this._authInitialized.next(true);
     } catch (error) {
-      console.error('Error initializing auth:', error);
+      const appError = this.errorService.handleError(error, { operation: 'initializeAuth' });
+      console.error('Error initializing auth:', appError);
       this._currentUser.next(null);
     } finally {
       this._authLoading.next(false);
@@ -106,11 +109,16 @@ export class AuthService {
         error: null
       };
     } catch (error) {
-      console.error('Error signing up:', error);
+      const appError = this.errorService.handleError(error, { 
+        operation: 'signUp',
+        email,
+        name
+      });
+      
       return {
         session: null,
         user: null,
-        error
+        error: appError
       };
     } finally {
       this._authLoading.next(false);
@@ -136,11 +144,15 @@ export class AuthService {
         error: null
       };
     } catch (error) {
-      console.error('Error signing in:', error);
+      const appError = this.errorService.handleError(error, { 
+        operation: 'signIn',
+        email
+      });
+      
       return {
         session: null,
         user: null,
-        error
+        error: appError
       };
     } finally {
       this._authLoading.next(false);
@@ -160,7 +172,8 @@ export class AuthService {
       this._currentUser.next(null);
       return true;
     } catch (error) {
-      console.error('Error signing out:', error);
+      const appError = this.errorService.handleError(error, { operation: 'signOut' });
+      await this.errorService.showErrorMessage(appError);
       return false;
     } finally {
       this._authLoading.next(false);
@@ -181,8 +194,12 @@ export class AuthService {
       
       return { success: true, error: null };
     } catch (error) {
-      console.error('Error resetting password:', error);
-      return { success: false, error };
+      const appError = this.errorService.handleError(error, { 
+        operation: 'resetPassword',
+        email
+      });
+      
+      return { success: false, error: appError };
     } finally {
       this._authLoading.next(false);
     }
@@ -202,8 +219,8 @@ export class AuthService {
       
       return { success: true, error: null };
     } catch (error) {
-      console.error('Error updating password:', error);
-      return { success: false, error };
+      const appError = this.errorService.handleError(error, { operation: 'updatePassword' });
+      return { success: false, error: appError };
     } finally {
       this._authLoading.next(false);
     }
@@ -235,8 +252,12 @@ export class AuthService {
       
       return { success: true, error: null };
     } catch (error) {
-      console.error('Error updating profile:', error);
-      return { success: false, error };
+      const appError = this.errorService.handleError(error, { 
+        operation: 'updateProfile',
+        profileData: data
+      });
+      
+      return { success: false, error: appError };
     } finally {
       this._authLoading.next(false);
     }
@@ -280,7 +301,7 @@ export class AuthService {
       const { data } = await this.supabase.client.auth.getSession();
       return !!data.session;
     } catch (error) {
-      console.error('Error validating token:', error);
+      const appError = this.errorService.handleError(error, { operation: 'isTokenValid' });
       return false;
     }
   }
@@ -296,7 +317,7 @@ export class AuthService {
       
       return !!data.session;
     } catch (error) {
-      console.error('Error refreshing token:', error);
+      const appError = this.errorService.handleError(error, { operation: 'refreshToken' });
       return false;
     }
   }

@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SupabaseService } from './supabase.service';
+import { ErrorService } from './error.service';
 import { 
   Task, 
   TaskPriority, 
@@ -18,7 +19,10 @@ export class TaskService {
   private _todayTasks = new BehaviorSubject<TaskDetailResponse[]>([]);
   private _loading = new BehaviorSubject<boolean>(false);
 
-  constructor(private supabase: SupabaseService) { }
+  constructor(
+    private supabase: SupabaseService,
+    private errorService: ErrorService
+  ) { }
 
   /**
    * Carga todas las tareas del usuario actual
@@ -31,8 +35,9 @@ export class TaskService {
       );
       this._tasks.next(data);
     } catch (error) {
-      console.error('Error al cargar tareas:', error);
-      throw error;
+      const appError = this.errorService.handleError(error, { operation: 'loadTasks' });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     } finally {
       this._loading.next(false);
     }
@@ -60,12 +65,14 @@ export class TaskService {
       
       this._todayTasks.next(processedData);
     } catch (error) {
-      console.error('Error al cargar tareas de hoy:', error);
-      throw error;
+      const appError = this.errorService.handleError(error, { operation: 'loadTodayTasks' });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     } finally {
       this._loading.next(false);
     }
   }
+
   /**
    * Obtiene una tarea específica por su ID con información detallada
    */
@@ -80,8 +87,12 @@ export class TaskService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error(`Error al obtener detalles de la tarea ${taskId}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getTaskDetails',
+        taskId
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 
@@ -91,6 +102,13 @@ export class TaskService {
   async createTask(taskRequest: CreateTaskRequest): Promise<Task> {
     this._loading.next(true);
     try {
+      // Obtener el ID del usuario actual
+      const { data: { session } } = await this.supabase.client.auth.getSession();
+      
+      if (!session?.user) {
+        throw new Error('Usuario no autenticado');
+      }
+      
       // Aseguramos que se establecen los valores predeterminados
       const newTask: Task = {
         ...taskRequest,
@@ -98,7 +116,8 @@ export class TaskService {
         priority: taskRequest.priority ?? TaskPriority.Low,
         is_important: taskRequest.is_important ?? false,
         is_frog: taskRequest.is_frog ?? false,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        user_id: session.user.id  // Agregar el ID del usuario actual
       };
       
       const createdTask = await this.supabase.insert('tasks', newTask);
@@ -109,8 +128,12 @@ export class TaskService {
       
       return createdTask;
     } catch (error) {
-      console.error('Error al crear tarea:', error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'createTask',
+        taskRequest 
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     } finally {
       this._loading.next(false);
     }
@@ -142,8 +165,13 @@ export class TaskService {
       
       return updatedTask;
     } catch (error) {
-      console.error(`Error al actualizar tarea ${taskId}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'updateTask',
+        taskId,
+        updates
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     } finally {
       this._loading.next(false);
     }
@@ -173,8 +201,12 @@ export class TaskService {
       this._todayTasks.next(todayTasks.filter(task => task.id !== taskId));
       
     } catch (error) {
-      console.error(`Error al eliminar tarea ${taskId}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'deleteTask',
+        taskId
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     } finally {
       this._loading.next(false);
     }
@@ -194,8 +226,12 @@ export class TaskService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error(`Error al buscar tareas con término "${searchTerm}":`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'searchTasks',
+        searchTerm
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 
@@ -210,8 +246,12 @@ export class TaskService {
           .order('created_at', { ascending: false })
       );
     } catch (error) {
-      console.error(`Error al obtener tareas de la categoría ${categoryId}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getTasksByCategory',
+        categoryId
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 
@@ -226,8 +266,12 @@ export class TaskService {
           .order('created_at', { ascending: false })
       );
     } catch (error) {
-      console.error(`Error al obtener tareas de la relación ${relationCategory}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getTasksByRelationCategory',
+        relationCategory
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 
@@ -246,8 +290,12 @@ export class TaskService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error(`Error al obtener tareas con etiqueta ${tag}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getTasksByTag',
+        tag
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 
@@ -260,8 +308,11 @@ export class TaskService {
         query.select('*').order('due_date', { ascending: true })
       );
     } catch (error) {
-      console.error('Error al obtener tareas atrasadas:', error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getOverdueTasks' 
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
     }
   }
 

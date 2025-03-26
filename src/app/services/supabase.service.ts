@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ErrorService, ErrorType } from './error.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SupabaseService {
   private supabase: SupabaseClient;
   private _session = new BehaviorSubject<any>(null);
 
-  constructor() {
+  constructor(private errorService: ErrorService) {
     this.supabase = createClient(
       environment.supabase.url,
       environment.supabase.anonKey
@@ -60,8 +61,11 @@ export class SupabaseService {
       
       return data;
     } catch (error) {
-      console.error('Error en consulta Supabase:', error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'query', 
+        table 
+      });
+      throw appError;
     }
   }
 
@@ -84,8 +88,12 @@ export class SupabaseService {
       
       return data[0];
     } catch (error) {
-      console.error(`Error insertando en ${table}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'insert', 
+        table, 
+        record 
+      });
+      throw appError;
     }
   }
 
@@ -110,8 +118,13 @@ export class SupabaseService {
       
       return data[0];
     } catch (error) {
-      console.error(`Error actualizando en ${table}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'update', 
+        table, 
+        id, 
+        updates 
+      });
+      throw appError;
     }
   }
 
@@ -132,8 +145,12 @@ export class SupabaseService {
         throw error;
       }
     } catch (error) {
-      console.error(`Error eliminando de ${table}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'delete', 
+        table, 
+        id 
+      });
+      throw appError;
     }
   }
 
@@ -157,8 +174,12 @@ export class SupabaseService {
       
       return data;
     } catch (error) {
-      console.error(`Error obteniendo de ${table}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getById', 
+        table, 
+        id 
+      });
+      throw appError;
     }
   }
 
@@ -179,8 +200,11 @@ export class SupabaseService {
       
       return data;
     } catch (error) {
-      console.error(`Error obteniendo todos de ${table}:`, error);
-      throw error;
+      const appError = this.errorService.handleError(error, { 
+        operation: 'getAll', 
+        table 
+      });
+      throw appError;
     }
   }
 }

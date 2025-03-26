@@ -1,3 +1,4 @@
+<!-- src/app/tasks/new-task/new-task.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -81,7 +82,7 @@
           <ion-icon name="information-circle" id="task-type-info"></ion-icon>
         </div>
         <ion-select-option *ngFor="let type of taskTypes" [value]="type.value">
-          <ion-icon [name]="type.icon"></ion-icon> {{type.label}}
+          {{type.label}}
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -91,7 +92,7 @@
         <ion-content class="ion-padding">
           <h4>Tipos de tarea</h4>
           <div *ngFor="let type of taskTypes" class="ion-margin-bottom">
-            <strong><ion-icon [name]="type.icon"></ion-icon> {{type.label}}:</strong>
+            <strong>{{type.label}}:</strong>
             <p>{{type.description}}</p>
           </div>
         </ion-content>
@@ -124,19 +125,6 @@
       </ng-template>
     </ion-popover>
     
-    <!-- CATEGORÍA DE RELACIÓN -->
-    <ion-item>
-      <ion-select 
-        label="Categoría" 
-        labelPlacement="floating"
-        placeholder="Selecciona una categoría (opcional)"
-        [(ngModel)]="newTask.relation_category">
-        <ion-select-option *ngFor="let cat of relationCategories" [value]="cat.value">
-          {{cat.label}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    
     <!-- ETIQUETAS -->
     <ion-item>
       <ion-label class="ion-padding-bottom">Etiquetas:</ion-label>
@@ -147,19 +135,17 @@
         *ngFor="let tag of availableTags" 
         [color]="isTagSelected(tag.value) ? 'primary' : 'medium'"
         (click)="toggleTag(tag.value)">
-        <ion-icon [name]="tag.icon"></ion-icon>
         <ion-label>{{tag.label}}</ion-label>
         <ion-icon name="checkmark" *ngIf="isTagSelected(tag.value)"></ion-icon>
       </ion-chip>
     </div>
-    
-    <!-- Se ha eliminado la sección de metodología -->
   </ion-list>
   
   <div class="ion-padding">
     <ion-button expand="block" (click)="saveTask()" [disabled]="isLoading">
       <ion-icon name="save" slot="start"></ion-icon>
-      Guardar Tarea
+      <span *ngIf="!isLoading">Guardar Tarea</span>
+      <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
     </ion-button>
   </div>
   
