@@ -1,6 +1,4 @@
 // src/app/models/task.model.ts
-// Modelo simplificado eliminando la duplicidad de categorías
-
 /**
  * Interfaz que define la estructura básica de una tarea
  */
@@ -19,6 +17,8 @@ export interface Task {
   is_important: boolean;      // Marcada como importante
   is_frog: boolean;           // Marcada como "frog" (tarea que debe hacerse primero)
   tags?: string[];            // Etiquetas asociadas a la tarea
+  completed_at?: string;      // Fecha en que se completó (si está completada)
+  is_overdue?: boolean;       // Indicador de tarea vencida (calculado)
 }
 
 /**
@@ -53,6 +53,7 @@ export interface CreateTaskRequest {
   is_important: boolean;
   is_frog: boolean;
   tags?: string[];
+  completed_at?: string;
 }
 
 /**
@@ -69,6 +70,7 @@ export interface UpdateTaskRequest {
   is_important?: boolean;
   is_frog?: boolean;
   tags?: string[];
+  completed_at?: string;
 }
 
 /**

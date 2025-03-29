@@ -63,10 +63,13 @@
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
         <ion-datetime 
-          id="due-date" 
-          presentation="date"
-          [(ngModel)]="newTask.due_date">
-        </ion-datetime>
+        id="due-date" 
+        presentation="date"
+        [(ngModel)]="newTask.due_date"
+        showDefaultButtons="true"
+        doneText="OK"
+        cancelText="Cancelar">
+      </ion-datetime>
       </ng-template>
     </ion-modal>
     
