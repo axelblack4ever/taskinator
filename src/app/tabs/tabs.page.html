@@ -1,4 +1,12 @@
+<!-- src/app/tabs/tabs.page.html -->
 <ion-tabs>
+  <!-- FAB posicionado con margen adecuado para no superponerse a los tabs -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="margin-bottom: 56px;">
+    <ion-fab-button routerLink="/tabs/tasks/new">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
   <!-- Barra de ion-tabs -->
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="today">
@@ -21,11 +29,4 @@
       <ion-label>Estadísticas</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
-
-  <!-- Boton fab para crear una nueva tarea -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/tabs/tasks/new">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>  
 </ion-tabs>

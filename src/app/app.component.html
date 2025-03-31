@@ -9,30 +9,38 @@
       </ion-header>
       <ion-content>
         <!-- Información del usuario -->
-        <!-- <div class="user-info ion-padding">
+        <div class="user-info ion-padding">
           <ion-item lines="none">
             <ion-icon slot="start" name="person"></ion-icon>
             <ion-label>
-              <h2>{{ userName || 'Usuario' }}</h2>
+              <h2>{{ userName || 'Alejandro Angel' }}</h2>
             </ion-label>
           </ion-item>
-        </div> -->
+        </div>
         
         <ion-list>
           <ng-container *ngFor="let p of appPages">
+            <!-- Elemento de menú regular -->
             <ion-item *ngIf="!p.children" [routerLink]="[p.url]" detail="false">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
             
-            <ion-item button *ngIf="p.children" (click)="toggleSection(p)" detail="false">
+            <!-- Elemento de menú con submenú - con indicador chevron -->
+            <ion-item button *ngIf="p.children" (click)="toggleSection(p)" detail="false" class="menu-with-children">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
-              <ion-icon slot="end" [name]="p.open ? 'chevron-up' : 'chevron-down'"></ion-icon>
+              <!-- Usando nombres de iconos con guiones como en la documentación de Ionicons -->
+              <ion-icon slot="end" name="chevron-down" *ngIf="!p.open" class="submenu-indicator"></ion-icon>
+              <ion-icon slot="end" name="chevron-up" *ngIf="p.open" class="submenu-indicator"></ion-icon>
             </ion-item>
             
-            <ion-list *ngIf="p.open && p.children">
-              <ion-item *ngFor="let sub of p.children" [routerLink]="[sub.url]" class="submenu-item">
+            <!-- Submenú (items secundarios) -->
+            <ion-list *ngIf="p.open && p.children" class="submenu-list">
+              <ion-item 
+                *ngFor="let sub of p.children" 
+                [routerLink]="[sub.url]" 
+                class="submenu-item">
                 <ion-icon slot="start" [name]="sub.icon"></ion-icon>
                 <ion-label>{{ sub.title }}</ion-label>
               </ion-item>

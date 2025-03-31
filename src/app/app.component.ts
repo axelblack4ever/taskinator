@@ -1,7 +1,8 @@
 // src/app/app.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
+import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   person, 
@@ -10,40 +11,57 @@ import {
   calendar, 
   timer, 
   grid, 
-  fastFood, 
-  clipboard,
-  chevronDown, 
+  alertCircle, 
+  pricetag,       
+  folder,         
+  folderOpen,     
+  heart,          
+  cash,           
+  people,         
+  school,         
+  briefcase,      
+  logOut,
+  // Importar los iconos de chevron exactamente como se nombran en Ionicons
+  chevronDown,
   chevronUp,
-  albums,
-  alertCircle,    // Para "Eat the Frog"
-  pricetag,       // Para Etiquetas
-  folder,         // Para Categorías
-  folderOpen,     // Para categoría Otros
-  heart,          // Para Pareja y etiqueta Salud
-  cash,           // Para la etiqueta Finanzas
-  people,         // Para Hijos, Familia, Amigos y etiqueta Relaciones personales
-  school,         // Para la etiqueta Desarrollo personal
-  briefcase,      // Para la etiqueta Trabajo
-  logOut          // Icono para cerrar sesión
+  albums 
 } from 'ionicons/icons';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle]
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    IonApp, 
+    IonSplitPane, 
+    IonMenu, 
+    IonContent, 
+    IonList, 
+    IonItem, 
+    IonIcon, 
+    IonLabel, 
+    IonRouterOutlet, 
+    IonHeader, 
+    IonToolbar, 
+    IonTitle, 
+    IonMenuToggle,
+    IonButtons
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   userName = '';
   private subscriptions: Subscription[] = [];
   
-  // MODIFICACION DE CODIGO
+  // Definir iconos como propiedades para usar en la plantilla
+  chevronDownIcon = 'chevron-down';
+  chevronUpIcon = 'chevron-up';
+  
   public appPages = [
     { title: 'Perfil', url: '/tabs/profile', icon: 'person', open: false },
     { 
@@ -84,13 +102,12 @@ export class AppComponent implements OnInit, OnDestroy {
     },
     { title: 'Configuración', url: '/tabs/settings', icon: 'options', open: false }
   ];
-  // MODIFICACION DE CODIGO
   
   constructor(
     private router: Router,
     private authService: AuthService
   ) {
-    // MODIFICACION DE CODIGO
+    // Registrar todos los iconos necesarios
     addIcons({ 
       person, 
       options, 
@@ -98,11 +115,6 @@ export class AppComponent implements OnInit, OnDestroy {
       calendar, 
       timer, 
       grid, 
-      fastFood,
-      clipboard,
-      chevronDown,
-      chevronUp,
-      albums,
       alertCircle,
       pricetag,
       folder,
@@ -112,9 +124,15 @@ export class AppComponent implements OnInit, OnDestroy {
       people,
       school,
       briefcase,
-      logOut
+      logOut,
+      chevronDown,
+      chevronUp,
+      albums
     });
-    // MODIFICACION DE CODIGO
+    
+    // Verificar que los iconos estén cargados
+    console.log('Iconos registrados:', 
+      {chevronDown: !!chevronDown, chevronUp: !!chevronUp});
   }
 
   ngOnInit() {

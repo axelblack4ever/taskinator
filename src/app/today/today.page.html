@@ -5,22 +5,12 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Hoy</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="silentRefresh()" [disabled]="isLoading || refreshingTasks">
-        <ion-icon slot="icon-only" name="refresh"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="chevronDownCircle"
-      pullingText="Desliza para actualizar"
-      refreshingSpinner="circles"
-      refreshingText="Actualizando...">
-    </ion-refresher-content>
+    <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
   <ion-header collapse="condense">
@@ -29,177 +19,42 @@
     </ion-toolbar>
   </ion-header>
   
-  <!-- Estado de carga inicial -->
-  <div *ngIf="isLoading && !todayAndOverdueTasks.length" class="ion-padding ion-text-center">
+  <div *ngIf="isLoading" class="ion-padding ion-text-center">
     <ion-spinner></ion-spinner>
     <p>Cargando tareas...</p>
   </div>
   
-  <!-- Indicador de actualización silenciosa -->
-  <div *ngIf="refreshingTasks && todayAndOverdueTasks.length" class="refresh-indicator">
-    <ion-spinner name="dots" color="primary"></ion-spinner>
-    <span>Actualizando...</span>
-  </div>
-  
-  <!-- Lista de tareas -->
-  <ion-list *ngIf="!isLoading || todayAndOverdueTasks.length">
-    <!-- Estado vacío -->
-    <div *ngIf="todayAndOverdueTasks.length === 0" class="ion-padding ion-text-center empty-state">
-      <ion-icon name="checkmarkCircle" class="large-icon"></ion-icon>
+  <ion-list *ngIf="!isLoading">
+    <div *ngIf="todayTasks.length === 0" class="ion-padding ion-text-center">
       <h2>¡Todo al día!</h2>
       <p>No tienes tareas pendientes para hoy.</p>
-      <ion-button routerLink="/tabs/tasks/new" expand="block" class="ion-margin-top">
+      <ion-button expand="block" routerLink="/tabs/tasks/new">
         <ion-icon name="add" slot="start"></ion-icon>
-        Crear nueva tarea
+        CREAR NUEVA TAREA
       </ion-button>
     </div>
     
-    <!-- Tareas agrupadas por estado -->
-    <ng-container *ngIf="todayAndOverdueTasks.length > 0">
-      <!-- Sección de tareas vencidas no completadas -->
-      <div *ngIf="hasOverdueTasks" class="task-section">
-        <ion-item-divider color="light">
-          <ion-label>Tareas vencidas</ion-label>
-        </ion-item-divider>
-        
-        <ion-item-sliding *ngFor="let task of todayAndOverdueTasks | filterTasks:'overdue'" #slidingItem>
-          <ion-item 
-            [id]="'task-' + task.id"
-            [class.priority-high]="task.priority === 2" 
-            [class.priority-medium]="task.priority === 1" 
-            [class.priority-low]="task.priority === 0">
-            <ion-checkbox 
-              slot="start" 
-              [checked]="!!task.completed" 
-              (ionChange)="markAsComplete(task.id!)">
-            </ion-checkbox>
-            <ion-label>
-              <h2 [class.completed]="task.completed" [class.overdue]="isOverdue(task)">{{ task.title }}</h2>
-              <p *ngIf="task.description">{{ task.description }}</p>
-              <div class="tag-container">
-                <ion-badge *ngIf="task.category?.name || task.category_name" 
-                          [style.background]="task.category?.color || task.category_color">
-                  {{ task.category?.name || task.category_name }}
-                </ion-badge>
-                <ion-badge *ngIf="task.is_important" color="warning" class="ml-5">
-                  Importante
-                </ion-badge>
-                <ion-badge *ngIf="task.is_frog" color="success" class="ml-5">
-                  Frog
-                </ion-badge>
-                <ion-badge *ngIf="task.due_date" color="medium" class="ml-5 date-badge">
-                  <ion-icon name="calendar" class="badge-icon"></ion-icon>
-                  {{ formatRelativeDate(task.due_date) }}
-                </ion-badge>
-              </div>
-            </ion-label>
-          </ion-item>
-          
-          <!-- Opciones al deslizar -->
-          <ion-item-options side="end">
-            <ion-item-option color="primary" (click)="editTask(task.id, slidingItem)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option color="danger" (click)="deleteTask(task.id, slidingItem)">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </div>
-      
-      <!-- Sección de tareas de hoy no completadas -->
-      <div *ngIf="hasTodayTasks" class="task-section">
-        <ion-item-divider color="light">
-          <ion-label>Tareas para hoy</ion-label>
-        </ion-item-divider>
-        
-        <ion-item-sliding *ngFor="let task of todayAndOverdueTasks | filterTasks:'today'" #slidingItem>
-          <ion-item 
-            [id]="'task-' + task.id"
-            [class.priority-high]="task.priority === 2" 
-            [class.priority-medium]="task.priority === 1" 
-            [class.priority-low]="task.priority === 0">
-            <ion-checkbox 
-              slot="start" 
-              [checked]="!!task.completed" 
-              (ionChange)="markAsComplete(task.id!)">
-            </ion-checkbox>
-            <ion-label>
-              <h2 [class.completed]="task.completed">{{ task.title }}</h2>
-              <p *ngIf="task.description">{{ task.description }}</p>
-              <div class="tag-container">
-                <ion-badge *ngIf="task.category?.name || task.category_name" 
-                          [style.background]="task.category?.color || task.category_color">
-                  {{ task.category?.name || task.category_name }}
-                </ion-badge>
-                <ion-badge *ngIf="task.is_important" color="warning" class="ml-5">
-                  Importante
-                </ion-badge>
-                <ion-badge *ngIf="task.is_frog" color="success" class="ml-5">
-                  Frog
-                </ion-badge>
-              </div>
-            </ion-label>
-          </ion-item>
-          
-          <!-- Opciones al deslizar -->
-          <ion-item-options side="end">
-            <ion-item-option color="primary" (click)="editTask(task.id, slidingItem)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option color="danger" (click)="deleteTask(task.id, slidingItem)">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </div>
-      
-      <!-- Sección de tareas completadas -->
-      <div *ngIf="hasCompletedTasks" class="task-section">
-        <ion-item-divider color="light">
-          <ion-label>Completadas</ion-label>
-        </ion-item-divider>
-        
-        <ion-item-sliding *ngFor="let task of todayAndOverdueTasks | filterTasks:'completed'" #slidingItem>
-          <ion-item 
-            [id]="'task-' + task.id"
-            class="completed-task">
-            <ion-checkbox 
-              slot="start" 
-              [checked]="!!task.completed" 
-              (ionChange)="markAsComplete(task.id!)">
-            </ion-checkbox>
-            <ion-label>
-              <h2 [class.completed]="task.completed">{{ task.title }}</h2>
-              <p *ngIf="task.description">{{ task.description }}</p>
-              <div class="tag-container">
-                <ion-badge *ngIf="task.category?.name || task.category_name" 
-                          [style.background]="task.category?.color || task.category_color"
-                          class="completed-badge">
-                  {{ task.category?.name || task.category_name }}
-                </ion-badge>
-                <ion-badge *ngIf="task.completed_at" color="medium" class="ml-5 date-badge">
-                  Completada: {{ formatRelativeDate(task.completed_at) }}
-                </ion-badge>
-              </div>
-            </ion-label>
-          </ion-item>
-          
-          <!-- Opciones al deslizar -->
-          <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="deleteTask(task.id, slidingItem)">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </div>
-    </ng-container>
+    <ion-item *ngFor="let task of todayTasks">
+      <ion-label>
+        <h2 [class.completed]="task.completed">{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+        <div class="tag-container">
+          <ion-badge *ngIf="task.category?.name" [style.background]="task.category?.color">
+            {{ task.category?.name }}
+          </ion-badge>
+          <ion-badge *ngIf="task.is_important" color="warning" class="ml-5">
+            Importante
+          </ion-badge>
+          <ion-badge *ngIf="task.is_frog" color="success" class="ml-5">
+            Frog
+          </ion-badge>
+        </div>
+      </ion-label>
+        <ion-checkbox 
+          slot="end" 
+          [checked]="!!task.completed" 
+          (ionChange)="task.id && markAsComplete(task.id)">
+      </ion-checkbox>
+    </ion-item>
   </ion-list>
-  
-  <!-- Botón flotante para crear tarea -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/tabs/tasks/new">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

@@ -1,3 +1,4 @@
+// src/global.scss
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -35,3 +36,77 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Estilos personalizados globales */
+
+/* Posicionamiento del FAB para evitar superposición con tab-bar */
+ion-fab[vertical="bottom"] {
+  bottom: 65px; /* Posicionar el FAB sobre la barra de tabs */
+}
+
+/* Asegurar que la tab-bar siempre está visible */
+ion-tab-bar {
+  z-index: 100;
+}
+
+/* Estilos para botones FAB */
+ion-fab-button {
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:active {
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(0.95);
+  }
+}
+
+/* Ajustes para pantallas más pequeñas */
+@media (max-width: 576px) {
+  ion-menu ion-item {
+    --min-height: 48px; /* Altura mínima para facilitar toque en móviles */
+  }
+  
+  ion-menu ion-list ion-list ion-item.submenu-item {
+    --min-height: 40px;
+  }
+}
+
+/* Estilos para las tarjetas de tareas */
+ion-item.task-card {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 8px;
+}
+
+/* Estilos para indicadores visuales de prioridad */
+.priority-high {
+  border-left: 4px solid var(--ion-color-danger);
+}
+
+.priority-medium {
+  border-left: 4px solid var(--ion-color-warning);
+}
+
+.priority-low {
+  border-left: 4px solid var(--ion-color-success);
+}
+
+/* Texto tachado para tareas completadas */
+.completed {
+  text-decoration: line-through;
+  color: var(--ion-color-medium);
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

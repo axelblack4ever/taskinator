@@ -1,218 +1,78 @@
-// src/app/today/today.page.scss
-// Estilos para tareas completadas y vencidas
-.completed {
-  text-decoration: line-through;
+// src/app/app.component.scss
+ion-menu ion-list {
+  padding-top: 0;
+}
+
+// Estilos para los elementos del menú principal
+ion-menu ion-item {
+  --padding-start: 16px;
+  cursor: pointer;
+  
+  &:hover {
+    --background: rgba(var(--ion-color-primary-rgb), 0.1);
+  }
+}
+
+// Estilo específico para menús con submenús
+ion-menu .menu-with-children {
+  // Asegurarse de que hay espacio para el chevron
+  --inner-padding-end: 16px;
+}
+
+// Estilos explícitos para los iconos chevron
+ion-menu .submenu-indicator {
+  font-size: 18px;
   color: var(--ion-color-medium);
-  font-weight: normal;
-}
-
-.overdue {
-  color: var(--ion-color-danger);
-  font-weight: 500;
-}
-
-// Contenedor de etiquetas
-.tag-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-// Estilos para badges
-ion-badge {
-  margin-right: 5px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  padding: 4px 8px;
+  margin-right: 8px;
+  min-width: 18px; // Asegurar un ancho mínimo para que sea visible
   
-  .badge-icon {
-    font-size: 0.8rem;
-    margin-right: 4px;
+  // Hacer el icono más visible
+  --ionicon-stroke-width: 48px;
+}
+
+// Estilos específicos para los elementos del submenú
+.submenu-list {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-left: 0;
+  background-color: rgba(var(--ion-color-light-rgb), 0.3);
+  
+  .submenu-item {
+    --padding-start: 40px; // Aumenta el padding para tabulación
+    font-size: 0.9rem; // Tamaño de fuente más pequeño
+    --min-height: 40px; // Altura más pequeña para los items del submenú
+    
+    ion-icon {
+      font-size: 1rem; // Iconos más pequeños
+      margin-right: 8px;
+    }
+    
+    ion-label {
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
   }
 }
 
-.ml-5 {
-  margin-left: 5px;
-}
-
-.date-badge {
-  opacity: 0.8;
-  font-size: 0.7rem;
-}
-
-.completed-badge {
-  opacity: 0.6;
-}
-
-// Estilos para tareas con prioridad
-.priority-high {
-  border-left: 4px solid var(--ion-color-danger);
-}
-
-.priority-medium {
-  border-left: 4px solid var(--ion-color-warning);
-}
-
-.priority-low {
-  border-left: 4px solid var(--ion-color-success);
-}
-
-// Estilos para tareas completadas
-.completed-task {
-  --background: rgba(var(--ion-color-light-rgb), 0.6);
-  opacity: 0.8;
-}
-
-// Animación para cuando una tarea se completa
-@keyframes fade-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0.6; transform: translateY(10px); }
-}
-
-ion-item.completed-animation {
-  animation: fade-out 0.5s ease-in-out;
-}
-
-// Secciones de tareas
-.task-section {
+// Estilo para la sección de información del usuario
+.user-info {
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--ion-color-light);
   margin-bottom: 8px;
-}
-
-// Estado vacío mejorado
-.empty-state {
-  padding: 40px 20px;
-  text-align: center;
-  
-  .large-icon {
-    font-size: 70px;
-    color: var(--ion-color-success);
-    margin-bottom: 20px;
-  }
   
   h2 {
-    color: var(--ion-color-dark);
     font-weight: 500;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    color: var(--ion-color-medium);
-    margin-bottom: 20px;
-  }
-}
-
-// Indicador de actualización silenciosa
-.refresh-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  background-color: var(--ion-color-light);
-  font-size: 0.8rem;
-  color: var(--ion-color-medium);
-  
-  ion-spinner {
-    margin-right: 8px;
-    width: 16px;
-    height: 16px;
-  }
-}
-
-// Mejora en los dividers
-ion-item-divider {
-  --background: var(--ion-color-light);
-  --color: var(--ion-color-medium);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  min-height: 30px;
-  
-  ion-label {
     margin: 0;
   }
 }
 
-// Mejora en los botones de acción deslizantes
-ion-item-option {
-  font-size: 0.9rem;
-}
-
-// Estilos para ion-checkbox
-ion-checkbox {
-  --border-radius: 50%;
-  --size: 20px;
-  margin-right: 10px;
-}
-
-// Mejorar la visualización de los elementos de la lista
-ion-item {
-  --padding-start: 10px;
-  --inner-padding-end: 10px;
+// Estilo para el botón de cerrar sesión
+.logout-item {
+  margin-top: 20px;
+  border-top: 1px solid var(--ion-color-light);
+  --color: var(--ion-color-danger);
   
-  &.ion-activated {
-    --background: rgba(var(--ion-color-primary-rgb), 0.1);
-  }
-  
-  h2 {
-    margin-top: 8px;
-    margin-bottom: 4px;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 1.3;
-  }
-  
-  p {
-    margin-top: 0;
-    margin-bottom: 8px;
-    color: var(--ion-color-medium);
-    font-size: 14px;
-    line-height: 1.2;
-  }
-}
-
-// Estilo del botón flotante
-ion-fab-button {
-  --box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb), 0.3);
-}
-
-// Estilo para el spinner de carga
-ion-spinner {
-  width: 28px;
-  height: 28px;
-  margin: 10px auto;
-}
-
-// Estilo para el caso de contenido vacío
-.ion-padding.ion-text-center {
-  padding-top: 20%;
-  
-  p {
-    margin-top: 10px;
-    color: var(--ion-color-medium);
-  }
-}
-
-// Transición suave al cambiar estados de tareas
-ion-item, ion-badge {
-  transition: all 0.2s ease-in-out;
-}
-
-// Mejorar espaciado en ion-item-sliding
-ion-item-sliding {
-  margin-bottom: 1px;
-}
-
-// Estilos de hover mejorados (para desktop)
-@media (hover: hover) {
-  ion-item:hover {
-    --background: rgba(var(--ion-color-light-rgb), 0.5);
-  }
-  
-  ion-fab-button:hover {
-    --background: var(--ion-color-primary-tint);
-  }
-  
-  ion-item-option:hover {
-    opacity: 0.9;
+  ion-icon {
+    color: var(--ion-color-danger);
   }
 }
