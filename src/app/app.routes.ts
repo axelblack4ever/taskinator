@@ -37,5 +37,9 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'login'
+  },  {
+    path: 'pomodoro',
+    loadComponent: () => import('./methodologies/pomodoro/pomodoro.page').then( m => m.PomodoroPage)
   }
+
 ];

@@ -1,0 +1,79 @@
+// src/app/methodologies/pomodoro/components/pomodoro-progress/pomodoro-progress.component.scss
+// versión 1.1.0 - 2025-04-05
+.progress-card {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+ion-card-content {
+  width: 100%;
+  padding: 6px; // Reducido de 10px
+}
+
+.pomodoro-progress-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px; // Reducido de 10px
+  width: 100%;
+}
+
+.pomodoro-block {
+  flex: 1;
+  height: 34px; // Reducido de 40px
+  background-color: var(--ion-color-light);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  
+  // Estado completado
+  &.completed {
+    background-color: var(--ion-color-success);
+    color: white;
+  }
+  
+  // Estado activo (estamos en este pomodoro)
+  &.active {
+    border-color: var(--ion-color-danger);
+    background-color: rgba(var(--ion-color-danger-rgb), 0.2);
+  }
+  
+  // Descanso largo
+  &.long {
+    background-color: var(--ion-color-light-shade);
+    
+    &.completed {
+      background-color: var(--ion-color-tertiary);
+    }
+    
+    &.active {
+      border-color: var(--ion-color-tertiary);
+      background-color: rgba(var(--ion-color-tertiary-rgb), 0.2);
+    }
+  }
+}
+
+.pomodoro-label {
+  font-size: 0.65rem; // Reducido de 0.7rem
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// Media queries para responsive
+@media (max-width: 576px) {
+  .pomodoro-block {
+    height: 28px; // Reducido de 30px
+  }
+  
+  .pomodoro-label {
+    font-size: 0.55rem; // Reducido de 0.6rem
+  }
+}

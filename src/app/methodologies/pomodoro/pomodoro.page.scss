@@ -1,0 +1,54 @@
+// src/app/methodologies/pomodoro/pomodoro.page.scss
+// versión 1.0.0 - 2025-04-04
+
+.pomodoro-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+// Definimos tamaños de filas
+.timer-row {
+  flex: 0 0 22%; // Reducido del 25%
+}
+
+.progress-row {
+  flex: 0 0 8%; // Reducido del 10%
+}
+
+.focused-task-row {
+  flex: 0 0 22%; // Reducido del 25%
+}
+
+.task-list-row {
+  flex: 1; // Toma el espacio restante
+  overflow: auto; // Permite scroll si hay muchas tareas
+}
+
+// Asegura que las columnas ocupen todo el ancho disponible
+ion-col {
+  display: flex;
+  flex-direction: column;
+  padding: 5px; // Reducido de 10px para hacer más compacto
+}
+
+// Reducir márgenes generales
+ion-card {
+  margin: 6px !important; // Margen reducido para tarjetas
+}
+
+// Media queries para ajustar tamaños en pantallas pequeñas
+@media (max-width: 576px) {
+  .timer-row {
+    flex: 0 0 25%; // Reducido del 30%
+  }
+  
+  .progress-row {
+    flex: 0 0 10%; // Reducido del 12%
+  }
+  
+  .focused-task-row {
+    flex: 0 0 20%; // Reducido del 23%
+  }
+}

@@ -1,0 +1,17 @@
+<!-- src/app/methodologies/pomodoro/components/pomodoro-progress/pomodoro-progress.component.html -->
+<!-- versión 1.0.0 - 2025-04-04 -->
+<ion-card class="progress-card">
+  <ion-card-content>
+    <div class="pomodoro-progress-container">
+      <div *ngFor="let pomodoro of pomodoros; let i = index" 
+           class="pomodoro-block"
+           [ngClass]="{
+             'completed': pomodoro.completed,
+             'active': pomodoro.active,
+             'long': pomodoro.label === 'Largo'
+           }">
+        <div class="pomodoro-label">{{ pomodoro.label }}</div>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>

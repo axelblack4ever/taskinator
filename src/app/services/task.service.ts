@@ -1,4 +1,5 @@
 // src/app/services/task.service.ts
+// versión 1.1.0 - 2025-04-04
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SupabaseService } from './supabase.service';
@@ -479,6 +480,27 @@ export class TaskService {
       throw appError;
     }
   }
+
+  // MODIFICACION DE CODIGO
+  /**
+   * Getters para acceder a los valores actuales
+   */
+  get currentTasks(): Task[] {
+    return this._tasks.getValue();
+  }
+
+  get currentTodayTasks(): TaskDetailResponse[] {
+    return this._todayTasks.getValue();
+  }
+
+  get currentOverdueAndTodayTasks(): TaskDetailResponse[] {
+    return this._overdueAndTodayTasks.getValue();
+  }
+
+  get isLoading(): boolean {
+    return this._loading.getValue();
+  }
+  // MODIFICACION DE CODIGO
 
   /**
    * Observables para acceder al estado

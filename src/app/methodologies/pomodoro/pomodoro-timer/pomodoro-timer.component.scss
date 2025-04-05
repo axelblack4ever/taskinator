@@ -1,0 +1,85 @@
+// src/app/methodologies/pomodoro/components/pomodoro-timer/pomodoro-timer.component.scss
+// versión 1.0.0 - 2025-04-04
+.pomodoro-timer-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    
+    &.work {
+      border-left: 4px solid var(--ion-color-danger);
+    }
+    
+    &.shortBreak {
+      border-left: 4px solid var(--ion-color-success);
+    }
+    
+    &.longBreak {
+      border-left: 4px solid var(--ion-color-tertiary);
+    }
+    
+    &.paused {
+      border-left: 4px solid var(--ion-color-warning);
+    }
+  }
+  
+  ion-card-header {
+    padding-bottom: 0;
+  }
+  
+  .pomodoro-counter {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    vertical-align: middle;
+  }
+  
+  ion-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    padding: 12px; // Reducido de 16px
+  }
+  
+  // Estilos para el temporizador
+  .timer-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px; // Reducido de 20px
+    flex: 1;
+  }
+  
+  .timer-text {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+    margin-bottom: 12px; // Reducido de 20px
+    letter-spacing: 2px;
+    text-align: center;
+  }
+  
+  // Barra de progreso
+  .progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: var(--ion-color-light);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: var(--ion-color-primary);
+    transition: width 1s linear;
+  }
+  
+  // Controles del temporizador
+  .timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px; // Reducido de 10px
+    margin-top: 8px; // Reducido de 10px
+  }

@@ -1,13 +1,65 @@
+<!-- src/app/methodologies/methodologies.page.html -->
+<!-- versión 1.1.0 - 2025-04-04 -->
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Métodos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Métodos</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <h2>Técnicas de Productividad</h2>
+  <p>Selecciona una metodología para empezar a trabajar de manera más efectiva.</p>
+
+  <ion-list>
+    <!-- MODIFICACION DE CODIGO -->
+    <ion-item routerLink="/tabs/methodologies/pomodoro" detail="true">
+      <ion-icon name="timer-outline" slot="start" color="danger"></ion-icon>
+      <ion-label>
+        <h2>Pomodoro</h2>
+        <p>Trabaja en intervalos de 25 minutos con descansos cortos</p>
+      </ion-label>
+    </ion-item>
+    <!-- MODIFICACION DE CODIGO -->
+
+    <ion-item button detail="true">
+      <ion-icon name="list-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h2>3/3/3</h2>
+        <p>3 tareas importantes por día con bloques de 3 horas</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item button detail="true">
+      <ion-icon name="grid-outline" slot="start" color="tertiary"></ion-icon>
+      <ion-label>
+        <h2>Eisenhower</h2>
+        <p>Prioriza tareas según su urgencia e importancia</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item button detail="true">
+      <ion-icon name="warning-outline" slot="start" color="success"></ion-icon>
+      <ion-label>
+        <h2>Eat the Frog</h2>
+        <p>Empieza el día con la tarea más desafiante</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item button detail="true">
+      <ion-icon name="calendar-outline" slot="start" color="warning"></ion-icon>
+      <ion-label>
+        <h2>Seinfeld</h2>
+        <p>Mantén la cadena de hábitos diarios sin romperla</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -1,0 +1,83 @@
+<!-- src/app/methodologies/pomodoro/components/focused-task/focused-task.component.html -->
+<!-- versión 1.0.0 - 2025-04-04 -->
+<ion-card class="focused-task-card" [ngClass]="{'overdue': focusedTask && isOverdue(focusedTask)}">
+  <ion-card-header>
+    <ion-card-title class="ion-text-center">
+      Tarea Enfocada
+      <ion-button size="small" fill="clear" (click)="refreshTasks()">
+        <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-card-title>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <!-- Estado de carga -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-skeleton-text [animated]="true" style="width: 80%; height: 30px;"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width: 60%; height: 20px;"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width: 90%; height: 60px;"></ion-skeleton-text>
+    </div>
+    
+    <!-- Sin tareas -->
+    <div *ngIf="!isLoading && !focusedTask" class="no-task-container">
+      <ion-text color="medium">
+        <h2>No hay tareas pendientes</h2>
+        <p>Todas las tareas están completadas o no hay tareas pendientes.</p>
+      </ion-text>
+    </div>
+    
+    <!-- Tarea enfocada -->
+    <div *ngIf="!isLoading && focusedTask" class="task-container">
+      <div class="task-header">
+        <h2 class="task-title">{{ focusedTask.title }}</h2>
+        
+        <div class="task-badges">
+          <!-- Prioridad -->
+          <ion-chip [color]="getPriorityColor(focusedTask.priority)" class="priority-chip">
+            <ion-icon name="flag"></ion-icon>
+            <ion-label>{{ getPriorityText(focusedTask.priority) }}</ion-label>
+          </ion-chip>
+          
+          <!-- Fecha de vencimiento -->
+          <ion-chip [color]="isOverdue(focusedTask) ? 'danger' : 'primary'" class="date-chip">
+            <ion-icon name="time"></ion-icon>
+            <ion-label>{{ formatDate(focusedTask.due_date) }}</ion-label>
+          </ion-chip>
+          
+          <!-- Etiqueta de importante -->
+          <ion-chip *ngIf="focusedTask.is_important" color="warning" class="tag-chip">
+            <ion-icon name="warning"></ion-icon>
+            <ion-label>Importante</ion-label>
+          </ion-chip>
+          
+          <!-- Etiqueta de frog -->
+          <ion-chip *ngIf="focusedTask.is_frog" color="success" class="tag-chip">
+            <ion-icon name="alert"></ion-icon>
+            <ion-label>Frog</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+      
+      <!-- Descripción de la tarea -->
+      <div class="task-description">
+        <p *ngIf="focusedTask.description">{{ focusedTask.description }}</p>
+        <p *ngIf="!focusedTask.description" class="no-description">Sin descripción</p>
+      </div>
+      
+      <!-- Categoría -->
+      <div *ngIf="focusedTask.category_name" class="task-category">
+        <ion-badge mode="ios" [style.background]="focusedTask.category_color">
+          {{ focusedTask.category_name }}
+        </ion-badge>
+      </div>
+      
+      <!-- Botón para completar -->
+      <div class="task-actions">
+        <ion-button expand="block" color="success" (click)="markAsCompleted()">
+          <ion-icon name="checkmark" slot="start"></ion-icon>
+          Marcar como Completada
+        </ion-button>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>

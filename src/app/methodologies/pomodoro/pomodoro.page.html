@@ -1,0 +1,48 @@
+<!-- src/app/methodologies/pomodoro/pomodoro.page.html -->
+<!-- versión 1.0.0 - 2025-04-04 -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Pomodoro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Pomodoro</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid class="pomodoro-container">
+    <!-- Temporizador Pomodoro -->
+    <ion-row class="timer-row">
+      <ion-col>
+        <app-pomodoro-timer></app-pomodoro-timer>
+      </ion-col>
+    </ion-row>
+
+    <!-- Barra de progreso -->
+    <ion-row class="progress-row">
+      <ion-col>
+        <app-pomodoro-progress></app-pomodoro-progress>
+      </ion-col>
+    </ion-row>
+
+    <!-- Tarea enfocada -->
+    <ion-row class="focused-task-row">
+      <ion-col>
+        <app-focused-task></app-focused-task>
+      </ion-col>
+    </ion-row>
+
+    <!-- Lista de tareas -->
+    <ion-row class="task-list-row">
+      <ion-col>
+        <app-task-list></app-task-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

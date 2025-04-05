@@ -1,0 +1,72 @@
+<!-- src/app/methodologies/pomodoro/components/task-list/task-list.component.html -->
+<!-- versión 1.0.0 - 2025-04-04 -->
+<ion-card class="task-list-card">
+  <ion-card-header>
+    <ion-card-title class="ion-text-center">
+      Tareas Disponibles
+      <ion-button size="small" fill="clear" (click)="refreshTasks()">
+        <ion-icon name="refresh" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-card-title>
+  </ion-card-header>
+  
+  <ion-card-content>
+    <!-- Estado de carga -->
+    <div *ngIf="isLoading" class="loading-container">
+      <ion-skeleton-text [animated]="true" style="width: 90%; height: 60px;"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width: 90%; height: 60px;"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" style="width: 90%; height: 60px;"></ion-skeleton-text>
+    </div>
+    
+    <!-- Sin tareas -->
+    <div *ngIf="!isLoading && availableTasks.length === 0" class="no-tasks-container">
+      <ion-text color="medium">
+        <h2>No hay más tareas</h2>
+        <p>Todas las tareas están completadas o solo hay una tarea enfocada.</p>
+      </ion-text>
+    </div>
+    
+    <!-- Lista de tareas con drag and drop -->
+    <ion-list class="task-list" cdkDropList (cdkDropListDropped)="onTaskDrop($event)" *ngIf="!isLoading && availableTasks.length > 0">
+      <ion-item *ngFor="let task of availableTasks; let i = index" 
+               cdkDrag
+               [ngClass]="{'overdue': isOverdue(task)}"
+               class="task-item"
+               lines="full">
+        <!-- Drag handle -->
+        <div class="drag-handle" cdkDragHandle>
+          <ion-icon name="arrow-up"></ion-icon>
+        </div>
+        
+        <!-- Contenido de la tarea -->
+        <ion-label (click)="setFocusedTask(task)">
+          <h2>{{ task.title }}</h2>
+          
+          <!-- Metadatos de la tarea -->
+          <div class="task-badges">
+            <!-- Prioridad -->
+            <ion-chip [color]="getPriorityColor(task.priority)" class="priority-chip">
+              <ion-icon name="flag"></ion-icon>
+              <ion-label>P{{ task.priority }}</ion-label>
+            </ion-chip>
+            
+            <!-- Fecha de vencimiento -->
+            <ion-chip [color]="isOverdue(task) ? 'danger' : 'primary'" class="date-chip">
+              <ion-icon name="time"></ion-icon>
+              <ion-label>{{ formatDate(task.due_date) }}</ion-label>
+            </ion-chip>
+            
+            <!-- Indicadores de importante y frog -->
+            <ion-icon *ngIf="task.is_important" name="warning" class="important-icon"></ion-icon>
+            <ion-icon *ngIf="task.is_frog" name="alert" class="frog-icon"></ion-icon>
+          </div>
+        </ion-label>
+        
+        <!-- Botón para enfocar -->
+        <ion-button slot="end" fill="clear" (click)="setFocusedTask(task)" class="focus-button">
+          Enfocar
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
