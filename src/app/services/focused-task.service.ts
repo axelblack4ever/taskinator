@@ -1,9 +1,9 @@
 // src/app/services/focused-task.service.ts
-// versión 1.0.0 - 2025-04-04
+// versión 1.1.0 - 2025-04-05
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TaskService } from './task.service';
+import { TaskService } from '../services/task.service';
 import { TaskDetailResponse } from '../models/task.model';
 
 @Injectable({
@@ -17,6 +17,19 @@ export class FocusedTaskService {
   constructor(private taskService: TaskService) {
     // Inicializar cargando las tareas de hoy
     this.refreshTasks();
+    
+    // Suscribirse a cambios en las tareas del día
+    this.taskService.overdueAndTodayTasks$.subscribe(tasks => {
+      console.log('Tareas actualizadas en task service:', tasks);
+      if (tasks.length > 0) {
+        this._tasksForPomodoro.next(tasks);
+        
+        // Si no hay tarea enfocada o si fue elegida automáticamente, determinar la tarea prioritaria
+        if (!this._focusedTask.getValue() || !this._manuallySelected.getValue()) {
+          this.determineAndSetFocusedTask();
+        }
+      }
+    });
   }
   
   // Getters para los Observables
@@ -46,14 +59,17 @@ export class FocusedTaskService {
   // Refrescar la lista de tareas
   async refreshTasks(): Promise<void> {
     try {
+      console.log('Refrescando tareas en FocusedTaskService');
       // Cargar tareas para hoy y pendientes
       await this.taskService.loadOverdueAndTodayTasks();
       
       // Obtener las tareas de hoy y pendientes
-      const tasks = await this.taskService.overdueAndTodayTasks$.toPromise();
+      const tasks = this.taskService.currentOverdueAndTodayTasks;
+      console.log('Tareas obtenidas:', tasks);
       
       // Filtrar solo tareas no completadas
-      const pendingTasks = tasks?.filter(task => !task.completed) || [];
+      const pendingTasks: TaskDetailResponse[] = tasks.filter((task: TaskDetailResponse) => !task.completed);
+      console.log('Tareas pendientes:', pendingTasks);
       
       // Actualizar la lista de tareas para Pomodoro
       this._tasksForPomodoro.next(pendingTasks);
@@ -65,7 +81,7 @@ export class FocusedTaskService {
         // Asegurarse de que la tarea enfocada sigue en la lista y no ha sido completada
         const focusedTask = this._focusedTask.getValue();
         if (focusedTask) {
-          const stillExists = pendingTasks.some(t => t.id === focusedTask.id && !t.completed);
+            const stillExists: boolean = pendingTasks.some((t: TaskDetailResponse) => t.id === focusedTask.id && !t.completed);
           if (!stillExists) {
             this.determineAndSetFocusedTask();
           }
@@ -79,6 +95,7 @@ export class FocusedTaskService {
   // Determine la tarea más prioritaria
   private determineAndSetFocusedTask(): void {
     const tasks = this._tasksForPomodoro.getValue();
+    console.log('Determinando tarea enfocada de:', tasks);
     
     if (!tasks.length) {
       this._focusedTask.next(null);
@@ -115,12 +132,21 @@ export class FocusedTaskService {
       }
     }
     
+    console.log('Tarea enfocada seleccionada:', priorityTask);
     this._focusedTask.next(priorityTask || null);
     this._manuallySelected.next(false);
   }
   
   // Obtener la tarea más antigua de un conjunto
   private getOldestTask(tasks: TaskDetailResponse[]): TaskDetailResponse {
+    if (tasks.length === 0) {
+      throw new Error('No se pueden obtener la tarea más antigua de un array vacío');
+    }
+    
+    if (tasks.length === 1) {
+      return tasks[0];
+    }
+    
     return tasks.reduce((oldest, current) => {
       if (!oldest.due_date) return current;
       if (!current.due_date) return oldest;
@@ -131,6 +157,7 @@ export class FocusedTaskService {
   
   // Establecer manualmente una tarea como enfocada
   setFocusedTask(task: TaskDetailResponse): void {
+    console.log('Estableciendo tarea enfocada manualmente:', task);
     this._focusedTask.next(task);
     this._manuallySelected.next(true);
   }
@@ -141,6 +168,7 @@ export class FocusedTaskService {
     
     if (focusedTask?.id) {
       try {
+        console.log('Marcando tarea como completada:', focusedTask);
         // Marcar la tarea como completada usando el TaskService
         await this.taskService.toggleTaskCompletion(focusedTask.id, true);
         

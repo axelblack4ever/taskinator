@@ -51,8 +51,10 @@ import { TaskDetailResponse } from 'src/app/models/task.model';
 export class FocusedTaskComponent implements OnInit, OnDestroy {
   focusedTask: TaskDetailResponse | null = null;
   isLoading = true;
+  availableTasks: TaskDetailResponse[] = [];
   
   private focusedTaskSubscription?: Subscription;
+  private availableTasksSubscription?: Subscription;
   
   constructor(private focusedTaskService: FocusedTaskService) {
     // Registrar iconos
@@ -71,7 +73,8 @@ export class FocusedTaskComponent implements OnInit, OnDestroy {
     this.refreshTasks();
     
     // Suscribirse a cambios en la tarea enfocada
-    this.focusedTaskSubscription = this.focusedTaskService.focusedTask$.subscribe((task: TaskDetailResponse | null) => {
+    this.focusedTaskSubscription = this.focusedTaskService.focusedTask$.subscribe(task => {
+      console.log('Nueva tarea enfocada recibida:', task);
       this.focusedTask = task;
       this.isLoading = false;
     });

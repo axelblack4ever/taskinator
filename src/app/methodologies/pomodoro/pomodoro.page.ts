@@ -17,6 +17,7 @@ import { PomodoroTimerComponent } from './pomodoro-timer/pomodoro-timer.componen
 import { PomodoroProgressComponent } from './pomodoro-progress/pomodoro-progress.component';
 import { FocusedTaskComponent } from './focused-task/focused-task.component';
 import { TaskListComponent } from './task-list/task-list.component';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-pomodoro',

@@ -79,13 +79,15 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.refreshTasks();
     
     // Suscribirse a las tareas disponibles
-    this.availableTasksSubscription = this.focusedTaskService.getAvailableTasks().subscribe((tasks: TaskDetailResponse[]) => {
+    this.availableTasksSubscription = this.focusedTaskService.getAvailableTasks().subscribe(tasks => {
+      console.log('Tareas disponibles recibidas:', tasks);
       this.availableTasks = tasks;
       this.isLoading = false;
     });
     
     // Suscribirse a la tarea enfocada
-    this.focusedTaskSubscription = this.focusedTaskService.focusedTask$.subscribe((task: TaskDetailResponse | null) => {
+    this.focusedTaskSubscription = this.focusedTaskService.focusedTask$.subscribe(task => {
+      console.log('Tarea enfocada en component de lista:', task);
       this.focusedTask = task;
     });
   }
