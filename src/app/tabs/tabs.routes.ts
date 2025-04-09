@@ -43,10 +43,10 @@ export const routes: Routes = [
         path: 'methodologies/pomodoro',
         loadComponent: () => import('../methodologies/pomodoro/pomodoro.page').then(m => m.PomodoroPage)
       },
-      // {
-      //   path: 'methodologies/three-three-three',
-      //   loadComponent: () => import('../methodologies/three-three-three/three-three-three.page').then(m => m.ThreeThreeThreePage)
-      // },
+      {
+        path: 'methodologies/three-three-three',
+        loadComponent: () => import('../methodologies/three-three-three/three-three-three.page').then(m => m.ThreeThreeThreePage)
+      },
       // {
       //   path: 'methodologies/eisenhower',
       //   loadComponent: () => import('../methodologies/eisenhower/eisenhower.page').then(m => m.EisenhowerPage)

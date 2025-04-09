@@ -1,0 +1,95 @@
+<!-- src/app/methodologies/three-three-three/task-modal/task-modal.component.html -->
+<!-- versión 1.2.0 - 2025-04-08 -->
+<ion-header>
+  <ion-toolbar [color]="getTaskTypeColor()">
+    <ion-title>Detalles de Tarea</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onClose()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-no-padding">
+  <div class="task-container">
+    <!-- Título de la tarea -->
+    <h1 class="task-title">{{ task?.title }}</h1>
+    
+    <!-- Chip de tipo de tarea -->
+    <ion-chip [color]="getTaskTypeColor()" class="task-type-chip">
+      <ion-label>{{ getTaskTypeText() }}</ion-label>
+    </ion-chip>
+    
+    <!-- Información de la tarea -->
+    <ion-list lines="none" class="task-info-list">
+      <!-- Descripción -->
+      <ion-item *ngIf="task?.description">
+        <div class="task-description">
+          <p>{{ task.description }}</p>
+        </div>
+      </ion-item>
+      
+      <!-- Fecha de vencimiento -->
+      <ion-item *ngIf="task?.due_date" [class.overdue]="isOverdue()">
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-label>
+          <h3>Fecha de vencimiento</h3>
+          <p>{{ formatDate(task.due_date) }}</p>
+        </ion-label>
+      </ion-item>
+      
+      <!-- Prioridad -->
+      <ion-item>
+        <ion-icon name="flag-outline" slot="start" [color]="getPriorityColor()"></ion-icon>
+        <ion-label>
+          <h3>Prioridad</h3>
+          <p>{{ getPriorityText() }}</p>
+        </ion-label>
+      </ion-item>
+      
+      <!-- Categoría -->
+      <ion-item *ngIf="task?.category_name">
+        <div class="category-container" slot="start">
+          <div class="category-color" [style.background-color]="task.category_color"></div>
+        </div>
+        <ion-label>
+          <h3>Categoría</h3>
+          <p>{{ task.category_name }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    
+    <!-- Indicadores importantes -->
+    <div class="indicators-container">
+      <ion-chip color="warning" *ngIf="task?.is_important">
+        <ion-icon name="alert-outline"></ion-icon>
+        <ion-label>Importante</ion-label>
+      </ion-chip>
+      
+      <ion-chip color="success" *ngIf="task?.is_frog">
+        <ion-icon name="alert-outline"></ion-icon>
+        <ion-label>Frog</ion-label>
+      </ion-chip>
+    </div>
+    
+    <!-- Etiquetas -->
+    <div class="tags-container" *ngIf="task?.tags && task.tags!.length > 0">
+      <h3>Etiquetas</h3>
+      <div class="tags-list">
+        <ion-chip *ngFor="let tag of task.tags" outline>
+          {{ tag }}
+        </ion-chip>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" color="success" (click)="onMarkComplete()">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+      MARCAR COMO COMPLETADA
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

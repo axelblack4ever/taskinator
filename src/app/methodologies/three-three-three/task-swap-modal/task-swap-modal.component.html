@@ -1,0 +1,105 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Intercambiar Tarea</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onClose()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <!-- Barra de búsqueda -->
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Buscar tarea..."
+      [value]="searchTerm"
+      (ionChange)="onSearchChange($event)"
+      [animated]="true"
+      showCancelButton="never">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Estado de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Cargando tareas...</p>
+  </div>
+  
+  <!-- Información de la tarea actual -->
+  <ion-list-header>
+    <ion-label>Tarea actual</ion-label>
+  </ion-list-header>
+  
+  <ion-item lines="none" class="current-task-item" *ngIf="currentTask">
+    <ion-label>
+      <h2>{{ currentTask.title }}</h2>
+      <p *ngIf="currentTask.due_date" [class.overdue]="isOverdue(currentTask)">
+        <ion-icon name="calendar-outline"></ion-icon>
+        {{ formatDate(currentTask.due_date) }}
+      </p>
+    </ion-label>
+    <ion-badge slot="end" 
+             [style.background-color]="currentTask.category_color" 
+             *ngIf="currentTask.category_name">
+      {{ currentTask.category_name }}
+    </ion-badge>
+  </ion-item>
+  
+  <!-- Lista de tareas disponibles para intercambiar -->
+  <ion-list *ngIf="!isLoading">
+    <ion-list-header>
+      <ion-label>Selecciona una tarea para intercambiar</ion-label>
+    </ion-list-header>
+    
+    <!-- Mensaje sin tareas -->
+    <ion-item *ngIf="filteredTasks.length === 0" lines="none">
+      <ion-label class="ion-text-center">
+        <p>No hay tareas disponibles para intercambiar</p>
+        <p *ngIf="searchTerm">No se encontraron resultados para "{{ searchTerm }}"</p>
+      </ion-label>
+    </ion-item>
+    
+    <!-- Lista de tareas disponibles -->
+    <ion-item *ngFor="let task of filteredTasks" 
+              button 
+              (click)="onSelectTask(task)" 
+              [class.overdue-item]="isOverdue(task)">
+      <ion-icon [name]="task.task_type ? (taskTypesMap[task.task_type!]?.icon || 'business') : 'business'" 
+                [color]="task.task_type ? (taskTypesMap[task.task_type!]?.color || 'primary') : 'primary'"
+                slot="start">
+      </ion-icon>
+      
+      <ion-label>
+        <h2>{{ task.title }}</h2>
+        <p *ngIf="task.due_date" [class.overdue]="isOverdue(task)">
+          <ion-icon name="calendar-outline"></ion-icon>
+          {{ formatDate(task.due_date) }}
+        </p>
+      </ion-label>
+      
+      <div class="task-indicators" slot="end">
+        <!-- Indicador de importancia -->
+        <ion-icon *ngIf="task.is_important" 
+                  name="alert-outline" 
+                  color="warning" 
+                  class="indicator-icon">
+        </ion-icon>
+        
+        <!-- Indicador de frog -->
+        <ion-icon *ngIf="task.is_frog" 
+                  name="flag-outline" 
+                  color="success" 
+                  class="indicator-icon">
+        </ion-icon>
+        
+        <!-- Categoría -->
+        <ion-badge *ngIf="task.category_name" 
+                   [style.background-color]="task.category_color">
+          {{ task.category_name }}
+        </ion-badge>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

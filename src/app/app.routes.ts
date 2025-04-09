@@ -40,6 +40,10 @@ export const routes: Routes = [
   },  {
     path: 'pomodoro',
     loadComponent: () => import('./methodologies/pomodoro/pomodoro.page').then( m => m.PomodoroPage)
+  },
+  {
+    path: 'three-three-three',
+    loadComponent: () => import('./methodologies/three-three-three/three-three-three.page').then( m => m.ThreeThreeThreePage)
   }
 
 ];

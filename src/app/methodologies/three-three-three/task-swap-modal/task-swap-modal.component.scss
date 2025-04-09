@@ -1,0 +1,145 @@
+// src/app/methodologies/three-three-three/task-swap-modal/task-swap-modal.component.scss
+// versión 1.0.0 - 2025-04-08
+
+// Contenedor de carga
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    
+    ion-spinner {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+    }
+    
+    p {
+      margin: 0;
+      color: var(--ion-color-medium);
+    }
+  }
+  
+  // Contenedor de la tarea actual
+  .current-task-container {
+    background-color: rgba(var(--ion-color-light-rgb), 0.5);
+    border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
+  }
+  
+  // Item de la tarea actual
+  .current-task-item {
+    --background: transparent;
+    
+    h2 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    p {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      margin: 0;
+      color: var(--ion-color-medium);
+      
+      &.overdue {
+        color: var(--ion-color-danger);
+      }
+      
+      ion-icon {
+        margin-right: 4px;
+        font-size: 16px;
+      }
+    }
+    
+    ion-badge {
+      font-size: 0.7rem;
+      font-weight: normal;
+      padding: 4px 8px;
+    }
+  }
+  
+  // Lista de tareas disponibles
+  ion-list-header {
+    font-size: 0.9rem;
+    font-weight: 600;
+    --background: rgba(var(--ion-color-light-rgb), 0.5);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    min-height: 40px;
+  }
+  
+  // Item para una tarea disponible
+  ion-item {
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+    
+    h2 {
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    p {
+      font-size: 0.8rem;
+      margin: 0;
+      color: var(--ion-color-medium);
+      display: flex;
+      align-items: center;
+      
+      &.overdue {
+        color: var(--ion-color-danger);
+      }
+      
+      ion-icon {
+        margin-right: 4px;
+        font-size: 16px;
+      }
+    }
+    
+    &.overdue-item {
+      border-left: 3px solid var(--ion-color-danger);
+    }
+  }
+  
+  // Indicadores de la tarea
+  .task-indicators {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+    
+    .indicator-icon {
+      font-size: 18px;
+    }
+    
+    ion-badge {
+      font-size: 0.7rem;
+      font-weight: normal;
+      padding: 4px 8px;
+    }
+  }
+  
+  // Media queries para ajustes en pantallas pequeñas
+  @media (max-width: 576px) {
+    ion-item h2 {
+      font-size: 0.9rem;
+    }
+    
+    ion-item p, .current-task-item p {
+      font-size: 0.75rem;
+    }
+    
+    .task-indicators .indicator-icon {
+      font-size: 16px;
+    }
+    
+    ion-badge {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+    }
+  }

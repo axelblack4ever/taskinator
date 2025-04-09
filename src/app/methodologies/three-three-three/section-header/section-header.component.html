@@ -1,0 +1,23 @@
+<!-- src/app/methodologies/three-three-three/section-content/section-content.component.html -->
+<!-- versión 1.0.0 - 2025-04-08 -->
+<div class="section-content" [ngClass]="getSectionClass()">
+  <!-- Mensaje sin tareas -->
+  <div *ngIf="tasks.length === 0" class="empty-section">
+    <p>No hay tareas de {{ type === TASK_TYPE.DeepWork ? 'trabajo profundo' : 
+                             type === TASK_TYPE.Impulse ? 'impulso' : 
+                             'mantenimiento' }} pendientes.</p>
+    <p>Añade nuevas tareas o clasifica las existentes.</p>
+  </div>
+  
+  <!-- Lista de tareas -->
+  <div *ngIf="tasks.length > 0" class="tasks-container">
+    <!-- Aquí se mostrarán hasta 3 tareas usando el componente TaskCard -->
+    <app-task-card *ngFor="let task of tasks.slice(0, 3)"
+                [task]="task"
+                [taskType]="type"
+                [showFullDetails]="shouldShowFullDetails()"
+                (openDetails)="onOpenDetails($event)"
+                (swapTask)="onSwapTask($event)">
+    </app-task-card>
+  </div>
+</div>

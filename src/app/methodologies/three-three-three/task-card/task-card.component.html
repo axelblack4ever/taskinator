@@ -1,0 +1,69 @@
+<!-- src/app/methodologies/three-three-three/task-card/task-card.component.html -->
+<!-- versión 1.0.0 - 2025-04-08 -->
+<ion-card [class]="getCardClass()" [class.overdue]="isOverdue()">
+  <ion-card-content>
+    <!-- Título de la tarea -->
+    <div class="task-header">
+      <div class="task-title" (click)="onOpenDetails()">
+        <h3>{{ task.title }}</h3>
+        <ion-icon 
+          *ngIf="!showFullDetails" 
+          name="information-circle-outline" 
+          class="info-icon">
+        </ion-icon>
+      </div>
+      
+      <!-- Botón para intercambiar tarea -->
+      <ion-button fill="clear" size="small" class="swap-button" (click)="onSwapTask()">
+        <ion-icon name="swap-horizontal-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+    
+    <!-- Descripción (solo en modo detallado) -->
+    <div *ngIf="showFullDetails && task.description" class="task-description">
+      <p>{{ task.description }}</p>
+    </div>
+    
+    <!-- Fecha de vencimiento -->
+    <div *ngIf="task.due_date" class="task-metadata" [ngClass]="{'overdue': isOverdue()}">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <span>{{ formatDate(task.due_date) }}</span>
+    </div>
+    
+    <!-- Indicadores importantes (siempre visibles) -->
+    <div class="task-indicators">
+      <!-- Prioridad -->
+      <ion-chip [color]="getPriorityColor()" class="priority-chip" *ngIf="showFullDetails">
+        <ion-icon name="flag-outline"></ion-icon>
+        <ion-label>{{ getPriorityText() }}</ion-label>
+      </ion-chip>
+      
+      <!-- Indicador de "frog" -->
+      <ion-chip color="success" class="indicator-chip" *ngIf="task.is_frog">
+        <ion-icon name="alert-outline"></ion-icon>
+        <ion-label>Frog</ion-label>
+      </ion-chip>
+      
+      <!-- Indicador de importante -->
+      <ion-chip color="warning" class="indicator-chip" *ngIf="task.is_important">
+        <ion-icon name="alert-outline"></ion-icon>
+        <ion-label>Importante</ion-label>
+      </ion-chip>
+      
+      <!-- Categoría -->
+      <ion-badge 
+        *ngIf="task.category_color" 
+        class="category-badge" 
+        [style.background-color]="task.category_color">
+        {{ task.category_name }}
+      </ion-badge>
+    </div>
+    
+    <!-- Etiquetas (solo en modo detallado) -->
+    <div *ngIf="showFullDetails && task.tags && task.tags.length > 0" class="task-tags">
+      <ion-chip *ngFor="let tag of task.tags" size="small" outline class="tag-chip">
+        {{ tag }}
+      </ion-chip>
+    </div>
+  </ion-card-content>
+</ion-card>

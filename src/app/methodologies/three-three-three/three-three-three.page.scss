@@ -1,0 +1,169 @@
+// src/app/methodologies/three-three-three/three-three-three.page.scss
+// versión 1.0.0 - 2025-04-08
+
+// Contenedor principal de carga
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    margin: 0;
+    color: var(--ion-color-medium);
+  }
+}
+
+// Grid principal que contiene las tres secciones
+.three-three-grid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+// Cada sección ocupa 1/3 de la altura total
+.section-row {
+  flex: 1;
+  min-height: 33%;
+  max-height: 33.4%;
+  padding: 4px 8px;
+  
+  &.deep-work-section {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+  }
+  
+  &.impulse-section {
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.05);
+  }
+  
+  &.maintenance-section {
+    background-color: rgba(var(--ion-color-success-rgb), 0.05);
+  }
+}
+
+// Cabecera de cada sección
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.2);
+  
+  ion-icon {
+    font-size: 24px;
+    margin-right: 8px;
+  }
+  
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+}
+
+// Contenido de cada sección
+.section-content {
+  padding: 0 8px;
+  overflow-y: auto;
+  max-height: calc(33vh - 56px); // Altura máxima considerando el header
+}
+
+// Mensaje de sección vacía
+.empty-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 100px;
+  text-align: center;
+  color: var(--ion-color-medium);
+  
+  p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Contenedor de tareas
+.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Wrapper de cada tarea
+.task-wrapper {
+  background-color: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  p {
+    margin: 0 0 8px 0;
+    
+    &:first-child {
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    
+    &:nth-child(2) {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+    }
+  }
+  
+  // Fecha de vencimiento
+  .task-due-date {
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+    margin-bottom: 8px;
+    
+    ion-icon {
+      margin-right: 4px;
+      font-size: 16px;
+    }
+  }
+  
+  // Categoría
+  .task-category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    
+    ion-badge {
+      font-size: 0.7rem;
+      font-weight: normal;
+      padding: 4px 8px;
+    }
+  }
+}
+
+// Media queries para ajustar en pantallas pequeñas
+@media (max-width: 576px) {
+  .section-header h2 {
+    font-size: 1rem;
+  }
+  
+  .task-wrapper {
+    padding: 8px;
+    
+    p:first-child {
+      font-size: 0.9rem;
+    }
+    
+    p:nth-child(2) {
+      font-size: 0.8rem;
+    }
+  }
+}

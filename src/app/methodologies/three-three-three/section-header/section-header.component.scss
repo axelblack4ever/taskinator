@@ -1,0 +1,48 @@
+// src/app/methodologies/three-three-three/section-content/section-content.component.scss
+// versión 1.0.0 - 2025-04-08
+
+.section-content {
+    padding: 10px;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    max-height: 25vh;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .deep-work-content {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+  }
+  
+  .impulse-content {
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.05);
+  }
+  
+  .maintenance-content {
+    background-color: rgba(var(--ion-color-success-rgb), 0.05);
+  }
+  
+  // Mensaje de sección vacía
+  .empty-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+    text-align: center;
+    color: var(--ion-color-medium);
+    padding: 15px 0;
+    
+    p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+  }
+  
+  // Contenedor de tareas
+  .tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 5px;
+  }
