@@ -1,40 +1,37 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
-*~
-*.sw[mnpcod]
-.tmp
-*.tmp
-*.tmp.*
-UserInterfaceState.xcuserstate
-$RECYCLE.BIN/
-
-*.log
-log.txt
-
-
-/.sourcemaps
-/.versions
-/coverage
-
-# Ionic
-/.ionic
-/www
-/platforms
-/plugins
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
+# Dependencias de Node.js
+node_modules/
 npm-debug.log
 yarn-error.log
 
-# IDEs and editors
+# Directorios de compilación/generados
+www/
+platforms/
+plugins/
+android/
+ios/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Archivos de caché
+.angular/
+.angular/cache/
+.nx/
+.nx/cache
+.sass-cache/
+.ionic/
+connect.lock/
+coverage/
+libpeerconnection.log
+.tmp/
+testem.log
+typings/
+
+# Archivos específicos del IDE
 .idea/
 .project
 .classpath
@@ -43,6 +40,7 @@ yarn-error.log
 .settings/
 *.sublime-project
 *.sublime-workspace
+.history/*
 
 # Visual Studio Code
 .vscode/*
@@ -50,21 +48,18 @@ yarn-error.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
 
-
-# Miscellaneous
-/.angular
-/.angular/cache
-.sass-cache/
-/.nx
-/.nx/cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
+# Archivos del sistema
 .DS_Store
 Thumbs.db
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+*.log
+log.txt
+*~
+*.sw[mnpcod]
+
+# Archivos de ambiente (excepto los de ejemplo)
+# src/environments/environment.*.ts
+# !src/environments/environment.ts
+# !src/environments/environment.prod.ts
