@@ -1,5 +1,5 @@
 // src/app/methodologies/three-three-three/section-content/section-content.component.ts
-// versión 1.0.0 - 2025-04-08
+// versión 1.1.0 - 2025-04-12
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskDetailResponse, TaskType } from '../../../models/task.model';
@@ -48,5 +48,14 @@ export class SectionContentComponent {
       default:
         return '';
     }
+  }
+  
+  getTasksToDisplay(): TaskDetailResponse[] {
+    // Para trabajo profundo, solo mostrar la primera tarea
+    if (this.type === TaskType.DeepWork) {
+      return this.tasks.slice(0, 1);
+    }
+    // Para otros tipos, mostrar hasta 3 tareas
+    return this.tasks.slice(0, 3);
   }
 }

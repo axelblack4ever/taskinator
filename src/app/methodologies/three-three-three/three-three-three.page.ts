@@ -1,5 +1,5 @@
 // src/app/methodologies/three-three-three/three-three-three.page.ts
-// versión 2.0.0 - 2025-04-08
+// versión 2.1.0 - 2025-04-12
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { 
@@ -59,6 +59,14 @@ export class ThreeThreeThreePage implements OnInit {
   // Flag para controlar el estado de carga
   isLoading = true;
   
+  // Flag para controlar si ya se cargaron las tareas iniciales
+  initialTasksLoaded = false;
+  
+  // Constantes para el número máximo de tareas por tipo
+  private readonly MAX_DEEP_WORK_TASKS = 1;
+  private readonly MAX_IMPULSE_TASKS = 3;
+  private readonly MAX_MAINTENANCE_TASKS = 3;
+  
   // Propiedades para modales
   selectedTask: TaskDetailResponse | null = null;
   isModalOpen = false;
@@ -82,8 +90,14 @@ export class ThreeThreeThreePage implements OnInit {
   
   /**
    * Carga todas las tareas directamente desde la base de datos
+   * Limitando a las cantidades específicas para cada tipo
    */
   async loadTasksFromDatabase() {
+    // Solo cargar tareas una vez
+    if (this.initialTasksLoaded) {
+      return;
+    }
+    
     this.isLoading = true;
     
     try {
@@ -125,16 +139,24 @@ export class ThreeThreeThreePage implements OnInit {
         } as TaskDetailResponse;
       });
       
-      // Filtrar y ordenar tareas por tipo
-      this.deepWorkTasks = this.filterAndSortTasksByType(processedTasks, TaskType.DeepWork);
-      this.impulseTasks = this.filterAndSortTasksByType(processedTasks, TaskType.Impulse);
-      this.maintenanceTasks = this.filterAndSortTasksByType(processedTasks, TaskType.Maintenance);
+      // Filtrar por tipo y limitar a las cantidades requeridas
+      this.deepWorkTasks = this.filterAndSortTasksByType(processedTasks, TaskType.DeepWork)
+        .slice(0, this.MAX_DEEP_WORK_TASKS);
       
-      console.log('Tareas filtradas y ordenadas:', {
+      this.impulseTasks = this.filterAndSortTasksByType(processedTasks, TaskType.Impulse)
+        .slice(0, this.MAX_IMPULSE_TASKS);
+      
+      this.maintenanceTasks = this.filterAndSortTasksByType(processedTasks, TaskType.Maintenance)
+        .slice(0, this.MAX_MAINTENANCE_TASKS);
+      
+      console.log('Tareas filtradas y limitadas:', {
         deepWork: this.deepWorkTasks.length,
         impulse: this.impulseTasks.length,
         maintenance: this.maintenanceTasks.length
       });
+      
+      // Marcar que las tareas iniciales ya se cargaron
+      this.initialTasksLoaded = true;
       
     } catch (error) {
       console.error('Error al cargar las tareas desde la base de datos:', error);
@@ -145,10 +167,6 @@ export class ThreeThreeThreePage implements OnInit {
 
   /**
    * Filtra y ordena las tareas según el tipo y los criterios establecidos
-   * 1. Fecha de vencimiento (más próxima primero)
-   * 2. Etiqueta frog
-   * 3. Etiqueta importante
-   * 4. Fecha de creación (más antigua primero)
    */
   filterAndSortTasksByType(tasks: TaskDetailResponse[], type: TaskType): TaskDetailResponse[] {
     console.log(`Filtrando tareas por tipo ${type}, total tareas: ${tasks.length}`);
@@ -160,27 +178,27 @@ export class ThreeThreeThreePage implements OnInit {
     }
     
     // Filtrar solo tareas del tipo especificado que no estén completadas
-    // Si el tipo especificado es null, usamos TypeScript type assertion para manejar esto
     const filteredTasks = tasks.filter(task => {
       const isCorrectType = task.task_type === type;
       const isNotCompleted = !task.completed;
-      
-      // Para diagnóstico
-      if (isCorrectType) {
-        console.log(`Tarea encontrada del tipo correcto: ${task.title} (${task.id}), tipo: ${task.task_type}`);
-      }
       
       return isCorrectType && isNotCompleted;
     });
     
     console.log(`Filtradas ${filteredTasks.length} tareas de tipo ${type}`);
     
-    // Si no hay tareas del tipo especificado, buscar tareas sin tipo definido
+    // Si no hay suficientes tareas del tipo especificado, podemos asignar tareas sin tipo
     if (filteredTasks.length === 0 && tasksWithoutType.length > 0) {
       console.log(`No hay tareas de tipo ${type}, intentando asignar tareas sin tipo`);
       
-      // Convertir hasta 3 tareas sin tipo al tipo actual
-      const tasksToAssign = tasksWithoutType.slice(0, 3);
+      // Convertir hasta N tareas sin tipo al tipo actual (según el máximo para cada tipo)
+      const maxTasksToAssign = type === TaskType.DeepWork ? 
+        this.MAX_DEEP_WORK_TASKS : 
+        type === TaskType.Impulse ? 
+        this.MAX_IMPULSE_TASKS : 
+        this.MAX_MAINTENANCE_TASKS;
+      
+      const tasksToAssign = tasksWithoutType.slice(0, maxTasksToAssign);
       
       // Intentar actualizar el tipo de estas tareas en la base de datos
       tasksToAssign.forEach(async task => {
@@ -310,31 +328,54 @@ export class ThreeThreeThreePage implements OnInit {
     this.swapTaskType = null;
   }
   
-  /**
+/**
    * Intercambia una tarea por otra
    */
-  async swapTask(newTask: TaskDetailResponse) {
-    if (!this.selectedTask || !this.swapTaskType) {
-      return;
-    }
-    
-    console.log(`Intercambiando tarea ${newTask.id} a tipo ${this.swapTaskType}`);
-    
-    try {
-      // Actualizar el tipo de tarea de la nueva tarea seleccionada
-      await this.taskService.updateTask(newTask.id!, {
-        task_type: this.swapTaskType
-      });
-      
-      // Recargar las tareas para reflejar los cambios directamente desde la base de datos
-      await this.loadTasksFromDatabase();
-      
-      // Cerrar el modal de intercambio
-      this.closeSwapTaskModal();
-    } catch (error) {
-      console.error('Error al intercambiar tarea:', error);
-    }
+async swapTask(newTask: TaskDetailResponse) {
+  if (!this.selectedTask || !this.swapTaskType) {
+    return;
   }
+  
+  console.log(`Intercambiando tarea ${newTask.id} a tipo ${this.swapTaskType}`);
+  
+  try {
+    // Actualizar el tipo de tarea de la nueva tarea seleccionada
+    await this.taskService.updateTask(newTask.id!, {
+      task_type: this.swapTaskType
+    });
+    
+    // Crear una copia de la tarea con el tipo correcto
+    const updatedTask: TaskDetailResponse = {
+      ...newTask,
+      task_type: this.swapTaskType // Asignar el tipo explícitamente
+    };
+    
+    // Actualizar la lista de tareas localmente
+    switch (this.swapTaskType) {
+      case TaskType.DeepWork:
+        // Reemplazar la tarea actual con la nueva
+        this.deepWorkTasks = [updatedTask];
+        break;
+      case TaskType.Impulse:
+        // Reemplazar la tarea actual con la nueva en la lista de impulso
+        this.impulseTasks = this.impulseTasks.map(task => 
+          task.id === this.selectedTask?.id ? updatedTask : task
+        );
+        break;
+      case TaskType.Maintenance:
+        // Reemplazar la tarea actual con la nueva en la lista de mantenimiento
+        this.maintenanceTasks = this.maintenanceTasks.map(task => 
+          task.id === this.selectedTask?.id ? updatedTask : task
+        );
+        break;
+    }
+    
+    // Cerrar el modal de intercambio
+    this.closeSwapTaskModal();
+  } catch (error) {
+    console.error('Error al intercambiar tarea:', error);
+  }
+}
   
   /**
    * Marca una tarea como completada
@@ -343,8 +384,18 @@ export class ThreeThreeThreePage implements OnInit {
     try {
       await this.taskService.toggleTaskCompletion(task.id!, true);
       
-      // Recargar las tareas para reflejar los cambios
-      await this.loadTasksFromDatabase();
+      // Actualizar las listas localmente sin cargar nuevas tareas
+      switch (task.task_type) {
+        case TaskType.DeepWork:
+          this.deepWorkTasks = this.deepWorkTasks.filter(t => t.id !== task.id);
+          break;
+        case TaskType.Impulse:
+          this.impulseTasks = this.impulseTasks.filter(t => t.id !== task.id);
+          break;
+        case TaskType.Maintenance:
+          this.maintenanceTasks = this.maintenanceTasks.filter(t => t.id !== task.id);
+          break;
+      }
       
       // Cerrar el modal de detalles si está abierto
       if (this.isModalOpen) {

@@ -1,0 +1,65 @@
+// src/app/methodologies/three-three-three/section-content/section-content.component.scss
+// versión 1.2.0 - 2025-04-12
+
+.section-content {
+    padding: 10px;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 10px;
+    overflow-y: auto;
+    max-height: 25vh;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; // Asegurar que ocupa todo el ancho disponible
+  }
+  
+  .deep-work-content {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+    
+    // Estilo específico para contenedor de tarea principal
+    .tasks-container {
+      display: flex;
+      justify-content: center;
+      padding: 5px 0;
+      width: 100%; // Asegurar ancho completo
+      
+      app-task-card {
+        width: 100%; // Ocupar ancho completo
+        max-width: 100%; // Eliminar restricción de ancho
+        margin: 0; // Quitar márgenes automáticos que podrían centrar
+      }
+    }
+  }
+  
+  .impulse-content {
+    background-color: rgba(var(--ion-color-tertiary-rgb), 0.05);
+  }
+  
+  .maintenance-content {
+    background-color: rgba(var(--ion-color-success-rgb), 0.05);
+  }
+  
+  // Mensaje de sección vacía
+  .empty-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+    text-align: center;
+    color: var(--ion-color-medium);
+    padding: 15px 0;
+    width: 100%; // Asegurar ancho completo
+    
+    p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+  }
+  
+  // Contenedor de tareas (estilo general para impulso y mantenimiento)
+  .tasks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 5px;
+    width: 100%; // Asegurar ancho completo
+  }
