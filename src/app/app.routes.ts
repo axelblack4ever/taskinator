@@ -44,6 +44,10 @@ export const routes: Routes = [
   {
     path: 'three-three-three',
     loadComponent: () => import('./methodologies/three-three-three/three-three-three.page').then( m => m.ThreeThreeThreePage)
+  },
+  {
+    path: 'eisenhower',
+    loadComponent: () => import('./methodologies/eisenhower/eisenhower.page').then( m => m.EisenhowerPage)
   }
 
 ];

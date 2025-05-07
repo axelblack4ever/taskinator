@@ -1,0 +1,204 @@
+<!-- src/app/methodologies/eisenhower/eisenhower.page.html -->
+<!-- versión 2.0.0 - 2025-05-06 -->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Matriz de Eisenhower</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refreshMatrix()" [disabled]="isLoading">
+        <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Matriz de Eisenhower</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Cargando tareas...</p>
+  </div>
+
+  <!-- Alerta para tareas vencidas -->
+  <ion-card *ngIf="hasOverdueTasks" color="danger" class="overdue-alert">
+    <ion-card-content>
+      <div class="alert-content">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <div class="alert-text">
+          <strong>Tienes {{overdueTasks.length}} {{overdueTasks.length === 1 ? 'tarea vencida' : 'tareas vencidas'}}</strong>
+          <p>Revisa las tareas atrasadas desde la página principal</p>
+        </div>
+        <ion-button fill="clear" color="light" (click)="dismissOverdueAlert()">
+          <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Matriz de cuadrantes -->
+  <ion-grid class="eisenhower-matrix" *ngIf="!isLoading">
+    <ion-row>
+      <!-- Cuadrante 1: Urgente e Importante -->
+      <ion-col size="6" class="quadrant">
+        <ion-card class="quadrant-1">
+          <ion-card-header>
+            <ion-card-title class="quadrant-title">
+              <span>Cuadrante 1</span>
+              <ion-button fill="clear" size="small" class="info-button" (click)="showQuadrantInfo(1, $event)">
+                <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="quadrant-content">
+            <ng-container *ngIf="matrixTasks['quadrant1'].length > 0; else noTasks">
+              <div *ngFor="let task of matrixTasks['quadrant1']" class="task-card" (click)="onTaskClick(task)">
+                <div class="task-info">
+                  <h4>{{ task.title }}</h4>
+                  <p class="task-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    {{ formatDate(task.due_date) }}
+                  </p>
+                </div>
+                <div class="task-category" *ngIf="task.category_name">
+                  <span [style.background-color]="task.category_color" class="category-indicator"></span>
+                  <small>{{ task.category_name }}</small>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noTasks>
+              <p class="no-tasks">No hay tareas urgentes e importantes</p>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Cuadrante 2: Importante pero No Urgente -->
+      <ion-col size="6" class="quadrant">
+        <ion-card class="quadrant-2">
+          <ion-card-header>
+            <ion-card-title class="quadrant-title">
+              <span>Cuadrante 2</span>
+              <ion-button fill="clear" size="small" class="info-button" (click)="showQuadrantInfo(2, $event)">
+                <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="quadrant-content">
+            <ng-container *ngIf="matrixTasks['quadrant2'].length > 0; else noTasks2">
+              <div *ngFor="let task of matrixTasks['quadrant2']" class="task-card" (click)="onTaskClick(task)">
+                <div class="task-info">
+                  <h4>{{ task.title }}</h4>
+                  <p class="task-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    {{ formatDate(task.due_date) }}
+                  </p>
+                </div>
+                <div class="task-category" *ngIf="task.category_name">
+                  <span [style.background-color]="task.category_color" class="category-indicator"></span>
+                  <small>{{ task.category_name }}</small>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noTasks2>
+              <p class="no-tasks">No hay tareas importantes pendientes</p>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <!-- Cuadrante 3: Urgente pero No Importante -->
+      <ion-col size="6" class="quadrant">
+        <ion-card class="quadrant-3">
+          <ion-card-header>
+            <ion-card-title class="quadrant-title">
+              <span>Cuadrante 3</span>
+              <ion-button fill="clear" size="small" class="info-button" (click)="showQuadrantInfo(3, $event)">
+                <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="quadrant-content">
+            <ng-container *ngIf="matrixTasks['quadrant3'].length > 0; else noTasks3">
+              <div *ngFor="let task of matrixTasks['quadrant3']" class="task-card" (click)="onTaskClick(task)">
+                <div class="task-info">
+                  <h4>{{ task.title }}</h4>
+                  <p class="task-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    {{ formatDate(task.due_date) }}
+                  </p>
+                </div>
+                <div class="task-category" *ngIf="task.category_name">
+                  <span [style.background-color]="task.category_color" class="category-indicator"></span>
+                  <small>{{ task.category_name }}</small>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noTasks3>
+              <p class="no-tasks">No hay tareas urgentes menores</p>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Cuadrante 4: Ni Urgente Ni Importante -->
+      <ion-col size="6" class="quadrant">
+        <ion-card class="quadrant-4">
+          <ion-card-header>
+            <ion-card-title class="quadrant-title">
+              <span>Cuadrante 4</span>
+              <ion-button fill="clear" size="small" class="info-button" (click)="showQuadrantInfo(4, $event)">
+                <ion-icon name="information-circle-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="quadrant-content">
+            <ng-container *ngIf="matrixTasks['quadrant4'].length > 0; else noTasks4">
+              <div *ngFor="let task of matrixTasks['quadrant4']" class="task-card" (click)="onTaskClick(task)">
+                <div class="task-info">
+                  <h4>{{ task.title }}</h4>
+                  <p class="task-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    {{ formatDate(task.due_date) }}
+                  </p>
+                </div>
+                <div class="task-category" *ngIf="task.category_name">
+                  <span [style.background-color]="task.category_color" class="category-indicator"></span>
+                  <small>{{ task.category_name }}</small>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noTasks4>
+              <p class="no-tasks">No hay tareas de baja prioridad</p>
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Mensaje sin tareas -->
+  <div *ngIf="!isLoading && 
+              matrixTasks['quadrant1'].length === 0 && 
+              matrixTasks['quadrant2'].length === 0 && 
+              matrixTasks['quadrant3'].length === 0 && 
+              matrixTasks['quadrant4'].length === 0" 
+       class="no-tasks-container">
+    <ion-icon name="checkmark-circle-outline"></ion-icon>
+    <h2>¡No hay tareas pendientes!</h2>
+    <p>Todas las tareas están completadas o no tienes tareas asignadas.</p>
+    <ion-button routerLink="/tabs/tasks/new" expand="block">
+      <ion-icon name="add" slot="start"></ion-icon>
+      CREAR NUEVA TAREA
+    </ion-button>
+  </div>
+</ion-content>

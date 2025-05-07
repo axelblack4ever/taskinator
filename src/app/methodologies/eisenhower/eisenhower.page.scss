@@ -1,0 +1,286 @@
+// src/app/methodologies/eisenhower/eisenhower.page.scss
+// versión 2.0.0 - 2025-05-06
+
+// Estilos generales
+ion-content {
+  --background: var(--ion-background-color);
+  display: flex;
+  flex-direction: column;
+}
+
+// Contenedor de carga
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 20px;
+  
+  ion-spinner {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    color: var(--ion-color-medium);
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+// Alerta de tareas vencidas
+.overdue-alert {
+  margin: 12px;
+  
+  .alert-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    ion-icon {
+      font-size: 24px;
+      color: white;
+    }
+    
+    .alert-text {
+      flex: 1;
+      
+      strong {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// Matriz principal
+.eisenhower-matrix {
+  height: calc(100vh - 120px); // Ajuste para ocupar la altura completa menos el header y posible alerta
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  
+  ion-row {
+    flex: 1; // Esto hace que cada fila ocupe la mitad del espacio disponible
+    
+    .quadrant {
+      padding: 4px;
+      height: 100%; // Asegura que ocupa toda la altura disponible
+      
+      ion-card {
+        margin: 0;
+        height: 100%; // Asegura que la tarjeta ocupa todo el espacio de la columna
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .quadrant-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        
+        span {
+          font-size: 1rem;
+          font-weight: 500;
+        }
+        
+        .info-button {
+          --padding-start: 4px;
+          --padding-end: 4px;
+          height: 24px;
+        }
+      }
+      
+      ion-card-content {
+        padding: 12px;
+        overflow-y: auto;
+        flex: 1; // Hace que el contenido ocupe todo el espacio disponible
+        
+        .task-card {
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 8px;
+          padding: 10px;
+          margin-bottom: 10px;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+          
+          .task-info {
+            h4 {
+              margin: 0 0 5px 0;
+              font-size: 0.95rem;
+              font-weight: 500;
+              color: var(--ion-color-dark);
+            }
+            
+            .task-date {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              margin: 0;
+              font-size: 0.8rem;
+              color: var(--ion-color-medium);
+              
+              ion-icon {
+                font-size: 16px;
+              }
+            }
+          }
+          
+          // Categoría
+          .task-category {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+            
+            .category-indicator {
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              margin-right: 6px;
+            }
+            
+            small {
+              font-size: 0.75rem;
+              color: var(--ion-color-medium);
+            }
+          }
+        }
+        
+        .no-tasks {
+          text-align: center;
+          color: var(--ion-color-medium);
+          font-size: 0.9rem;
+          padding: 20px 0;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+// Colores específicos de cada cuadrante
+.quadrant-1 {
+  border-left: 4px solid var(--ion-color-danger);
+  background-color: rgba(var(--ion-color-danger-rgb), 0.05);
+}
+
+.quadrant-2 {
+  border-left: 4px solid var(--ion-color-success);
+  background-color: rgba(var(--ion-color-success-rgb), 0.05);
+}
+
+.quadrant-3 {
+  border-left: 4px solid var(--ion-color-warning);
+  background-color: rgba(var(--ion-color-warning-rgb), 0.05);
+}
+
+.quadrant-4 {
+  border-left: 4px solid var(--ion-color-medium);
+  background-color: rgba(var(--ion-color-medium-rgb), 0.05);
+}
+
+// Formateo de fechas
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ion-color-medium);
+  font-size: 0.8rem;
+  
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+// Mensaje cuando no hay tareas
+.no-tasks-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  padding: 20px;
+  text-align: center;
+  
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-success);
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+  }
+  
+  p {
+    margin: 0 0 30px 0;
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    max-width: 300px;
+  }
+  
+  ion-button {
+    --border-radius: 10px;
+  }
+}
+
+// Responsividad
+@media (max-width: 576px) {
+  .eisenhower-matrix {
+    padding: 4px;
+    
+    .quadrant-title {
+      padding: 6px 8px;
+      
+      span {
+        font-size: 0.9rem;
+      }
+    }
+    
+    .task-card {
+      padding: 8px;
+      
+      .task-info h4 {
+        font-size: 0.85rem;
+      }
+      
+      .task-date {
+        font-size: 0.75rem;
+      }
+    }
+  }
+  
+  .no-tasks-container {
+    h2 {
+      font-size: 1.3rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .quadrant .quadrant-title span {
+    font-size: 0.8rem;
+  }
+}

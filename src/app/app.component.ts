@@ -71,8 +71,10 @@ export class AppComponent implements OnInit, OnDestroy {
       children: [
         { title: 'Pomodoro', url: '/tabs/methodologies/pomodoro', icon: 'timer' },
         { title: '3/3/3', url: '/tabs/methodologies/three-three-three', icon: 'list' },
+        // MODIFICACION DE CODIGO
         { title: 'Eisenhower', url: '/tabs/methodologies/eisenhower', icon: 'grid' },
         { title: 'Eat the Frog', url: '/tabs/methodologies/eat-frog', icon: 'alert-circle' },
+        // MODIFICACION DE CODIGO
       ]
     },
     { 
