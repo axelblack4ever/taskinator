@@ -1,6 +1,9 @@
+// src/app/methodologies/eisenhower/eisenhower.page.ts
+// versión 2.2.0 - 2025-05-14
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { 
   IonContent, 
   IonHeader, 
@@ -19,6 +22,11 @@ import {
   IonButton,
   IonPopover,
   IonModal,
+  IonSpinner,
+  IonBadge,
+  IonChip,
+  IonLabel,
+  IonText,
   ModalController,
   ToastController,
   AlertController
@@ -29,7 +37,11 @@ import {
   timeOutline,
   calendarOutline,
   alertCircleOutline,
-  closeOutline, refreshOutline, checkmarkCircleOutline, add } from 'ionicons/icons';
+  closeOutline,
+  refreshOutline,
+  checkmarkCircleOutline,
+  add
+} from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { QuadrantInfoComponent } from './components/quadrant-info/quadrant-info.component';
 import { TaskDetailComponent } from './components/task-detail/task-detail.component';
@@ -44,6 +56,7 @@ import { TaskDetailResponse } from '../../models/task.model';
   imports: [
     CommonModule, 
     FormsModule,
+    RouterLink,
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -61,6 +74,11 @@ import { TaskDetailResponse } from '../../models/task.model';
     IonButton,
     IonPopover,
     IonModal,
+    IonSpinner,
+    IonBadge,
+    IonChip,
+    IonLabel,
+    IonText,
     QuadrantInfoComponent,
     TaskDetailComponent
   ]
@@ -96,9 +114,21 @@ export class EisenhowerPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private eisenhowerService: EisenhowerService
   ) {
-    addIcons({refreshOutline,alertCircleOutline,closeOutline,informationCircleOutline,calendarOutline,checkmarkCircleOutline,add,timeOutline});
+    addIcons({
+      refreshOutline,
+      alertCircleOutline,
+      closeOutline,
+      informationCircleOutline,
+      calendarOutline,
+      checkmarkCircleOutline,
+      add,
+      timeOutline
+    });
   }
 
+  // Variable para controlar si la alerta ya se ha cerrado manualmente
+  private alertDismissed = false;
+  
   ngOnInit() {
     // Suscribirse a cambios en las tareas de la matriz
     this.matrixSubscription = this.eisenhowerService.matrixTasks$.subscribe(tasks => {
@@ -107,12 +137,10 @@ export class EisenhowerPage implements OnInit, OnDestroy {
     
     // Suscribirse a cambios en las tareas vencidas
     this.overdueSubscription = this.eisenhowerService.overdueTasks$.subscribe(tasks => {
-      this.overdueTasks = tasks;
-      this.hasOverdueTasks = tasks.length > 0;
-      
-      // Si hay tareas vencidas y es la primera carga, mostrar alerta
-      if (this.hasOverdueTasks && this.isLoading) {
-        this.showOverdueTasksInfo();
+      // Solo actualizar el estado si la alerta no ha sido descartada manualmente
+      if (!this.alertDismissed) {
+        this.overdueTasks = tasks;
+        this.hasOverdueTasks = tasks.length > 0;
       }
     });
     
@@ -152,18 +180,27 @@ export class EisenhowerPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Muestra información sobre las tareas vencidas
-   */
+  // El método showOverdueTasksInfo ya no se utiliza
+  // Se deja comentado por si se necesita referencia en el futuro
+  /*
   async showOverdueTasksInfo() {
     const alert = await this.alertController.create({
       header: 'Tareas Vencidas',
       message: `Tienes ${this.overdueTasks.length} ${this.overdueTasks.length === 1 ? 'tarea vencida' : 'tareas vencidas'} que no se muestran en la matriz. Revisa la página principal para gestionar estas tareas.`,
-      buttons: ['Entendido']
+      buttons: [
+        {
+          text: 'Entendido',
+          handler: () => {
+            console.log('Botón Entendido pulsado');
+            return true;
+          }
+        }
+      ]
     });
     
     await alert.present();
   }
+  */
 
   /**
    * Muestra información sobre un cuadrante
@@ -234,10 +271,11 @@ export class EisenhowerPage implements OnInit, OnDestroy {
   }
   
   /**
-   * Oculta la alerta de tareas vencidas
+   * Oculta la alerta de tareas vencidas y evita que aparezca nuevamente
    */
   dismissOverdueAlert() {
     this.hasOverdueTasks = false;
+    this.alertDismissed = true; // Marcar la alerta como descartada permanentemente
   }
   
   /**
@@ -255,8 +293,13 @@ export class EisenhowerPage implements OnInit, OnDestroy {
   
   /**
    * Formatea una fecha para mostrarla de forma amigable
+   * @param dateString La fecha a formatear (puede ser undefined)
+   * @returns Una cadena con la fecha formateada
    */
-  formatDate(dateString: string): string {
+  formatDate(dateString?: string): string {
+    // Si no hay fecha, devolver un texto por defecto
+    if (!dateString) return 'Sin fecha';
+    
     const date = new Date(dateString);
     
     const today = new Date();

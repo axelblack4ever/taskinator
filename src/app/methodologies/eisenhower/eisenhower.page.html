@@ -1,5 +1,5 @@
 <!-- src/app/methodologies/eisenhower/eisenhower.page.html -->
-<!-- versión 2.0.0 - 2025-05-06 -->
+<!-- versión 1.0.0 - 2025-05-14 -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -62,7 +62,7 @@
               <div *ngFor="let task of matrixTasks['quadrant1']" class="task-card" (click)="onTaskClick(task)">
                 <div class="task-info">
                   <h4>{{ task.title }}</h4>
-                  <p class="task-date">
+                  <p class="task-date" *ngIf="task.due_date">
                     <ion-icon name="calendar-outline"></ion-icon>
                     {{ formatDate(task.due_date) }}
                   </p>
@@ -96,7 +96,7 @@
               <div *ngFor="let task of matrixTasks['quadrant2']" class="task-card" (click)="onTaskClick(task)">
                 <div class="task-info">
                   <h4>{{ task.title }}</h4>
-                  <p class="task-date">
+                  <p class="task-date" *ngIf="task.due_date">
                     <ion-icon name="calendar-outline"></ion-icon>
                     {{ formatDate(task.due_date) }}
                   </p>
@@ -132,7 +132,7 @@
               <div *ngFor="let task of matrixTasks['quadrant3']" class="task-card" (click)="onTaskClick(task)">
                 <div class="task-info">
                   <h4>{{ task.title }}</h4>
-                  <p class="task-date">
+                  <p class="task-date" *ngIf="task.due_date">
                     <ion-icon name="calendar-outline"></ion-icon>
                     {{ formatDate(task.due_date) }}
                   </p>
@@ -166,7 +166,7 @@
               <div *ngFor="let task of matrixTasks['quadrant4']" class="task-card" (click)="onTaskClick(task)">
                 <div class="task-info">
                   <h4>{{ task.title }}</h4>
-                  <p class="task-date">
+                  <p class="task-date" *ngIf="task.due_date">
                     <ion-icon name="calendar-outline"></ion-icon>
                     {{ formatDate(task.due_date) }}
                   </p>
@@ -185,20 +185,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- Mensaje sin tareas -->
-  <div *ngIf="!isLoading && 
-              matrixTasks['quadrant1'].length === 0 && 
-              matrixTasks['quadrant2'].length === 0 && 
-              matrixTasks['quadrant3'].length === 0 && 
-              matrixTasks['quadrant4'].length === 0" 
-       class="no-tasks-container">
-    <ion-icon name="checkmark-circle-outline"></ion-icon>
-    <h2>¡No hay tareas pendientes!</h2>
-    <p>Todas las tareas están completadas o no tienes tareas asignadas.</p>
-    <ion-button routerLink="/tabs/tasks/new" expand="block">
-      <ion-icon name="add" slot="start"></ion-icon>
-      CREAR NUEVA TAREA
-    </ion-button>
-  </div>
 </ion-content>
