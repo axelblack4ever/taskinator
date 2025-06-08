@@ -16,6 +16,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.0.0",
+    "@angular/cdk": "^19.0.0",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
     "@angular/core": "^19.0.0",
@@ -30,7 +31,6 @@
     "@capacitor/keyboard": "latest",
     "@capacitor/status-bar": "latest",
     "@ionic/angular": "^8.0.0",
-    "@angular/cdk": "^19.0.0",
     "@supabase/supabase-js": "^2.49.1",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
