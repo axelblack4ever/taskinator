@@ -21,13 +21,20 @@ export class FocusedTaskService {
     // Suscribirse a cambios en las tareas del día
     this.taskService.overdueAndTodayTasks$.subscribe(tasks => {
       console.log('Tareas actualizadas en task service:', tasks);
-      if (tasks.length > 0) {
-        this._tasksForPomodoro.next(tasks);
-        
-        // Si no hay tarea enfocada o si fue elegida automáticamente, determinar la tarea prioritaria
-        if (!this._focusedTask.getValue() || !this._manuallySelected.getValue()) {
-          this.determineAndSetFocusedTask();
-        }
+
+      // Actualizar siempre la lista de tareas disponibles
+      this._tasksForPomodoro.next(tasks);
+
+      if (tasks.length === 0) {
+        // Limpiar la tarea enfocada si ya no hay tareas
+        this._focusedTask.next(null);
+        this._manuallySelected.next(false);
+        return;
+      }
+
+      // Si no hay tarea enfocada o fue elegida automáticamente, determinar la tarea prioritaria
+      if (!this._focusedTask.getValue() || !this._manuallySelected.getValue()) {
+        this.determineAndSetFocusedTask();
       }
     });
   }
