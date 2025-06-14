@@ -480,7 +480,41 @@ export class TaskService {
       throw appError;
     }
   }
+  /**
+   * Obtiene las tareas marcadas como frog y no completadas
+   */
+  async getFrogTasks(): Promise<TaskDetailResponse[]> {
+    try {
+      const { data, error } = await this.supabase.client
+        .from('tasks')
+        .select(`
+          *,
+          category:category_id (
+            id,
+            name,
+            color
+          )
+        `)
+        .eq('is_frog', true)
+        .eq('completed', false)
+        .order('due_date', { ascending: true })
+        .order('is_important', { ascending: false });
 
+      if (error) throw error;
+
+      return (data as any[]).map((task: any) => ({
+        ...task,
+        category_name: task.category?.name,
+        category_color: task.category?.color
+      })) as TaskDetailResponse[];
+    } catch (error) {
+      const appError = this.errorService.handleError(error, {
+        operation: 'getFrogTasks'
+      });
+      await this.errorService.showErrorMessage(appError);
+      throw appError;
+    }
+  }
   // MODIFICACION DE CODIGO
   /**
    * Getters para acceder a los valores actuales

@@ -33,21 +33,28 @@ export const routes: Routes = [
     loadComponent: () => import('./tasks/new-task/new-task.page').then(m => m.NewTaskPage),
     canActivate: [authGuard]
   },
-  // Ruta de comodín para redirigir al inicio de sesión
   {
-    path: '**',
-    redirectTo: 'login'
-  },  {
     path: 'pomodoro',
-    loadComponent: () => import('./methodologies/pomodoro/pomodoro.page').then( m => m.PomodoroPage)
+    loadComponent: () => import('./methodologies/pomodoro/pomodoro.page').then(m => m.PomodoroPage),
+    canActivate: [authGuard]
   },
   {
     path: 'three-three-three',
-    loadComponent: () => import('./methodologies/three-three-three/three-three-three.page').then( m => m.ThreeThreeThreePage)
+    loadComponent: () => import('./methodologies/three-three-three/three-three-three.page').then(m => m.ThreeThreeThreePage),
+    canActivate: [authGuard]
   },
   {
     path: 'eisenhower',
-    loadComponent: () => import('./methodologies/eisenhower/eisenhower.page').then( m => m.EisenhowerPage)
+    loadComponent: () => import('./methodologies/eisenhower/eisenhower.page').then(m => m.EisenhowerPage),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'eat-frog',
+    loadComponent: () => import('./methodologies/frog/frog.page').then(m => m.EatTheFrogPage),
+    canActivate: [authGuard]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
-
 ];

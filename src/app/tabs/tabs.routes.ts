@@ -52,6 +52,10 @@ export const routes: Routes = [
         path: 'methodologies/eisenhower',
         loadComponent: () => import('../methodologies/eisenhower/eisenhower.page').then(m => m.EisenhowerPage)
       },
+      {
+        path: 'methodologies/eat-frog',
+        loadComponent: () => import('../methodologies/frog/frog.page').then(m => m.EatTheFrogPage)
+      },
       // MODIFICACION DE CODIGO
       // {
       //   path: 'methodologies/eisenhower',

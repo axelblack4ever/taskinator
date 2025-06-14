@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Eat the Frog</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Eat the Frog</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div *ngIf="!currentFrog" class="no-frogs">
+    <p>¡Has acabado con la plaga de ranas por hoy!</p>
+  </div>
+
+  <ion-grid *ngIf="currentFrog">
+    <ion-row class="frog-image-row">
+      <ion-col class="ion-text-center">
+        <div class="frog-emoji">🐸</div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="frog-info-row">
+      <ion-col>
+        <h2>{{ currentFrog.title }}</h2>
+        <p>{{ currentFrog.description }}</p>
+      </ion-col>
+    </ion-row>
+    <ion-row class="frog-actions-row">
+      <ion-col size="6" class="ion-text-center">
+        <ion-button (click)="completeCurrentFrog()">
+          <ion-icon name="checkmark" slot="start"></ion-icon>
+          Completar
+          <ion-icon name="information-circle" (click)="$event.stopPropagation(); infoComplete.present($event)" slot="end"></ion-icon>
+        </ion-button>
+        <ion-popover #infoComplete triggerAction="click">
+          <ng-template>
+            <ion-content class="ion-padding">
+              <p>Marca la tarea como completada.</p>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
+      </ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-button (click)="rotateFrog()" [disabled]="rotationsLeft<=0">
+          <ion-icon name="refresh-outline" slot="start"></ion-icon>
+          Rotar Rana
+          <ion-icon name="information-circle" (click)="$event.stopPropagation(); infoRotate.present($event)" slot="end"></ion-icon>
+        </ion-button>
+        <ion-popover #infoRotate triggerAction="click">
+          <ng-template>
+            <ion-content class="ion-padding">
+              <p>Muestra la siguiente rana. Solo 3 rotaciones por sesión.</p>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
