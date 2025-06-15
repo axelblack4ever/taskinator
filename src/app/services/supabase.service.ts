@@ -13,10 +13,29 @@ export class SupabaseService {
   private _session = new BehaviorSubject<any>(null);
 
   constructor(private errorService: ErrorService) {
-    this.supabase = createClient(
-      environment.supabase.url,
-      environment.supabase.anonKey
-    );
+    const { url, anonKey } = environment.supabase;
+
+// Inicialización personalizada del cliente de Supabase desactivando el sistema de locking entre pestañas.
+// Supabase usa por defecto la API Web Locks (`navigator.locks`) para evitar conflictos al acceder al token de sesión
+// cuando se abren varias pestañas simultáneamente. Sin embargo, en algunos navegadores o entornos puede dar errores.
+//
+// Para evitar estos problemas, proporcionamos una función `lock` que ignora el bloqueo real:
+// simplemente ejecuta el `callback()` directamente, sin esperar ni competir por el control.
+// Esta función sigue la firma esperada por Supabase: `(key, acquireTimeout, callback)`.
+//
+// Esta solución es válida siempre que no se requiera sincronización de sesión entre pestañas.
+// Si en el futuro se necesita esa funcionalidad, se puede eliminar este `lock` personalizado
+// para volver al comportamiento por defecto de Supabase.
+    this.supabase = createClient(url, anonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        lock: async (_key: string, _acquireTimeout: number, callback: () => Promise<any>) => {
+          return await callback();
+        }
+      }
+    });
 
     // Intentar recuperar sesión al iniciar
     this.supabase.auth.getSession().then(({ data }) => {
