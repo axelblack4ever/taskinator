@@ -10,4 +10,43 @@
       <ion-title size="large">Estadísticas</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Total de tareas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ totalTasks }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Tareas completadas por semana</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let s of weeklyStats">
+          <ion-label>{{ s.week }}</ion-label>
+          <ion-badge slot="end">{{ s.count }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Tareas por categoría</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let c of categoryStats">
+          <ion-label>
+            Categoría {{ c.categoryId === null ? 'Sin categoría' : c.categoryId }}
+          </ion-label>
+          <ion-badge slot="end">{{ c.count }}</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
