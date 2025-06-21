@@ -11,42 +11,61 @@
     </ion-toolbar>
   </ion-header>
 
+
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>Total de tareas</ion-card-title>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Total Tasks</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      {{ totalTasks }}
+      <ion-grid>
+        <ion-row>
+          <ion-col class="ion-text-center"><strong>Historical</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Pending</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Completed</strong></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-text-center">{{ totalTasks }}</ion-col>
+          <ion-col class="ion-text-center">{{ totalPending }}</ion-col>
+          <ion-col class="ion-text-center">{{ totalCompleted }}</ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>Tareas completadas por semana</ion-card-title>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Tasks Completed per Week</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let s of weeklyStats">
+        <ion-item *ngFor="let s of weeklyStats | slice:0:weeksToDisplay">
           <ion-label>{{ s.week }}</ion-label>
           <ion-badge slot="end">{{ s.count }}</ion-badge>
         </ion-item>
       </ion-list>
+      <div class="ion-text-center" *ngIf="weeklyStats.length > weeksToDisplay">
+        <ion-button fill="clear" (click)="showMoreWeeks()">Mostrar más</ion-button>
+      </div>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>Tareas por categoría</ion-card-title>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Tasks by Category</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-list>
-        <ion-item *ngFor="let c of categoryStats">
-          <ion-label>
-            Categoría {{ c.categoryId === null ? 'Sin categoría' : c.categoryId }}
-          </ion-label>
-          <ion-badge slot="end">{{ c.count }}</ion-badge>
-        </ion-item>
-      </ion-list>
+      <ion-grid>
+        <ion-row>
+          <ion-col></ion-col>
+          <ion-col class="ion-text-center"><strong>Pending</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Historical</strong></ion-col>
+        </ion-row>
+        <ion-row *ngFor="let c of categoryStats">
+          <ion-col>{{ c.name || 'Sin categoría' }}</ion-col>
+          <ion-col class="ion-text-center">{{ c.pending }}</ion-col>
+          <ion-col class="ion-text-center">{{ c.historical }}</ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-card-content>
   </ion-card>
 </ion-content>

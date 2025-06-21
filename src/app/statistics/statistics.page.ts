@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { IonCol, IonRow, IonGrid, IonButton } from '@ionic/angular/standalone';
 import {
   IonContent,
   IonHeader,
@@ -37,6 +38,10 @@ import { Subscription } from 'rxjs';
     IonItem,
     IonLabel,
     IonBadge,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonButton,
     CommonModule,
     FormsModule
   ]
@@ -45,6 +50,10 @@ import { Subscription } from 'rxjs';
 export class StatisticsPage implements OnInit, OnDestroy {
 
   totalTasks = 0;
+  totalPending = 0;
+  totalCompleted = 0;
+  weeksToDisplay = 5;
+
   weeklyStats: WeeklyStats[] = [];
   categoryStats: CategoryStats[] = [];
 
@@ -56,6 +65,10 @@ export class StatisticsPage implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
+    // Load initial statistics data
+    await this.statisticsService.loadData();
+    this.refreshStats(); // primera carga
+
     // React to any change in the tasks list
     this.subscriptions.push(
       this.taskService.tasks$.subscribe(() => this.refreshStats())
@@ -74,8 +87,16 @@ export class StatisticsPage implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+
+  showMoreWeeks() {
+    this.weeksToDisplay += 5;
+  }
+
   refreshStats() {
     this.totalTasks = this.statisticsService.getTotalTasks();
+    this.totalPending = this.statisticsService.getPendingTotal();
+    this.totalCompleted = this.statisticsService.getCompletedTotal();
+
     this.weeklyStats = this.statisticsService.getCompletedTasksPerWeek();
     this.categoryStats = this.statisticsService.getCountsPerCategory();
   }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TaskService } from './task.service';
+import { SupabaseService } from './supabase.service';
+import { Task } from '../models/task.model';
 
 export interface WeeklyStats {
   week: string;
@@ -7,26 +8,43 @@ export interface WeeklyStats {
 }
 
 export interface CategoryStats {
-  categoryId: number | null;
-  count: number;
+  name: string | null;
+  pending: number;
+  historical: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatisticsService {
-  constructor(private taskService: TaskService) {}
+  private tasks: Task[] = [];
 
-  /** Get total number of tasks */
+  constructor(private supabase: SupabaseService) {}
+
+  async loadData(): Promise<void> {
+    this.tasks = await this.supabase.getAll('tasks');
+  }
+
+  /** Historical total */
   getTotalTasks(): number {
-    return this.taskService.currentTasks.length;
+    return this.tasks.length;
+  }
+
+  /** Pending tasks total */
+  getPendingTotal(): number {
+    return this.tasks.filter(t => !t.completed).length;
+  }
+
+  /** Completed tasks total */
+  getCompletedTotal(): number {
+    return this.tasks.filter(t => t.completed).length;
   }
 
   /**
    * Returns completed tasks grouped by ISO week.
    */
   getCompletedTasksPerWeek(): WeeklyStats[] {
-    const completed = this.taskService.currentTasks.filter(t => t.completed && t.completed_at);
+    const completed = this.tasks.filter(t => t.completed && t.completed_at);
     const map = new Map<string, number>();
     completed.forEach(task => {
       if (task.completed_at) {
@@ -41,12 +59,17 @@ export class StatisticsService {
    * Returns task counts grouped by category.
    */
   getCountsPerCategory(): CategoryStats[] {
-    const map = new Map<number | null, number>();
-    this.taskService.currentTasks.forEach(task => {
-      const key = task.category_id ?? null;
-      map.set(key, (map.get(key) || 0) + 1);
+    const map = new Map<string | null, { pending: number; historical: number }>();
+    this.tasks.forEach(task => {
+      const name = (task as any).category_name ?? null;
+      const entry = map.get(name) || { pending: 0, historical: 0 };
+      entry.historical += 1;
+      if (!task.completed) {
+        entry.pending += 1;
+      }
+      map.set(name, entry);
     });
-    return Array.from(map.entries()).map(([categoryId, count]) => ({ categoryId, count }));
+    return Array.from(map.entries()).map(([name, counts]) => ({ name, ...counts }));
   }
 
   private getYearWeek(dateString: string): string {
