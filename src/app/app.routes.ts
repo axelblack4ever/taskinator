@@ -34,6 +34,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'tasks/group/:type/:value',
+    loadComponent: () => import('./tasks/group-view/task-group/task-group.page').then(m => m.TaskGroupPage),
+    canActivate: [authGuard]
+  },  
+  {
     path: 'pomodoro',
     loadComponent: () => import('./methodologies/pomodoro/pomodoro.page').then(m => m.PomodoroPage),
     canActivate: [authGuard]

@@ -4,13 +4,19 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SupabaseService } from './supabase.service';
 import { ErrorService } from './error.service';
-import { 
-  Task, 
-  TaskPriority, 
-  CreateTaskRequest, 
-  UpdateTaskRequest, 
-  TaskDetailResponse 
+import {
+  Task,
+  TaskPriority,
+  CreateTaskRequest,
+  UpdateTaskRequest,
+  TaskDetailResponse
 } from '../models/task.model';
+
+export interface GroupedTasks {
+  overdue: TaskDetailResponse[];
+  pending: TaskDetailResponse[];
+  completed: TaskDetailResponse[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -437,6 +443,43 @@ export class TaskService {
       throw appError;
     }
   }
+
+  /**
+   * Obtiene tareas por categoría y las agrupa en vencidas, pendientes y completadas
+   */
+  async getTasksByCategoryGrouped(categoryId: number): Promise<GroupedTasks> {
+    const tasks = await this.getTasksByCategory(categoryId);
+    return this.groupTasks(tasks);
+  }
+
+  /**
+   * Obtiene tareas por etiqueta y las agrupa en vencidas, pendientes y completadas
+   */
+  async getTasksByTagGrouped(tag: string): Promise<GroupedTasks> {
+    const tasks = await this.getTasksByTag(tag);
+    return this.groupTasks(tasks);
+  }
+
+  /**
+   * Agrupa las tareas en vencidas, pendientes y completadas
+   * @param tasks Lista de tareas a agrupar
+   * @returns Objeto con las tareas agrupadas
+   */
+  private groupTasks(tasks: TaskDetailResponse[]): GroupedTasks {
+    const today = new Date().toISOString().split('T')[0];
+    const overdue = tasks.filter(t => !t.completed && t.due_date && t.due_date < today)
+      .sort((a,b)=>new Date(a.due_date!).getTime()-new Date(b.due_date!).getTime());
+    const pending = tasks.filter(t => !t.completed && (!t.due_date || t.due_date >= today))
+      .sort((a,b)=>new Date(a.due_date || '') .getTime()-new Date(b.due_date || '') .getTime());
+    const completed = tasks.filter(t => t.completed)
+      .sort((a,b)=>{
+        const ad = a.completed_at || a.updated_at || a.due_date || '';
+        const bd = b.completed_at || b.updated_at || b.due_date || '';
+        return new Date(bd).getTime()-new Date(ad).getTime();
+      });
+    return { overdue, pending, completed };
+  }
+
 
   /**
    * Obtiene tareas atrasadas

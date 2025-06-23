@@ -1,0 +1,28 @@
+<div class="task-section" [style.border-color]="color">
+  <ion-item (click)="toggle()" lines="full" [style.color]="color">
+    <ion-label>{{ title }} ({{ tasks.length }})</ion-label>
+    <ion-select [(ngModel)]="sort" (ionChange)="sortTasks()" slot="end" interface="popover">
+      <ion-select-option value="date">Date</ion-select-option>
+      <ion-select-option value="priority">Priority</ion-select-option>
+      <ion-select-option value="frog">Frog</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-list *ngIf="!collapsed" class="task-list">
+    <ion-item-sliding *ngFor="let task of tasks">
+      <ion-item [style.border-color]="color" lines="inset">
+        <ion-label>
+          <h2>{{ task.title }}</h2>
+          <p *ngIf="task.due_date">{{ task.due_date | date:'shortDate' }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="success">
+          ✔️
+        </ion-item-option>
+        <ion-item-option>📝</ion-item-option>
+        <ion-item-option>🚀</ion-item-option>
+        <ion-item-option color="danger">🗑️</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</div>

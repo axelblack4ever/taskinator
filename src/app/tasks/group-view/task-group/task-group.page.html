@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <ng-container *ngIf="type === 'tag'">🏷️ Tag: {{ value }} ({{ totalTasks }} tareas)</ng-container>
+      <ng-container *ngIf="type === 'category'">📂 Category: {{ value }} ({{ totalTasks }} tareas)</ng-container>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="summary-card ion-padding">
+    <p>Total: {{ totalTasks }}</p>
+    <p>Overdue: {{ overdue.length }}</p>
+    <p>Pending: {{ pending.length }}</p>
+    <p>Completed: {{ completed.length }}</p>
+    <a routerLink="/tabs/statistics">Ver estadísticas avanzadas</a>
+  </div>
+
+  <app-task-section [title]="'Overdue Tasks'" [tasks]="overdue" color="maroon"></app-task-section>
+  <app-task-section [title]="'Pending Tasks'" [tasks]="pending" color="olive"></app-task-section>
+  <app-task-section [title]="'Completed Tasks'" [tasks]="completed" color="black"></app-task-section>
+</ion-content>

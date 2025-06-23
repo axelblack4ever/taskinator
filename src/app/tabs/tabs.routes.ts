@@ -20,6 +20,10 @@ export const routes: Routes = [
         loadComponent: () => import('../tasks/new-task/new-task.page').then(m => m.NewTaskPage)
       },
       {
+        path: 'tasks/group/:type/:value',
+        loadComponent: () => import('../tasks/group-view/task-group/task-group.page').then(m => m.TaskGroupPage)
+      },      
+      {
         path: 'methodologies',
         loadComponent: () => import('../methodologies/methodologies.page').then(m => m.MethodologiesPage)
       },
