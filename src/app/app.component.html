@@ -7,6 +7,7 @@
           <ion-title (click)="goToHome()" style="cursor: pointer">TASKINATOR</ion-title>
         </ion-toolbar>
       </ion-header>
+
       <ion-content>
         <!-- Información del usuario -->
         <div class="user-info ion-padding">
@@ -17,45 +18,68 @@
             </ion-label>
           </ion-item>
         </div>
-        
+
         <ion-list>
           <ng-container *ngFor="let p of appPages">
-            <!-- Elemento de menú regular -->
-            <ion-item *ngIf="!p.children" [routerLink]="[p.url]" detail="false">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-            
-            <!-- Elemento de menú con submenú - con indicador chevron -->
-            <ion-item button *ngIf="p.children" (click)="toggleSection(p)" detail="false" class="menu-with-children">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-              <!-- Usando nombres de iconos con guiones como en la documentación de Ionicons -->
-              <ion-icon slot="end" name="chevron-down" *ngIf="!p.open" class="submenu-indicator"></ion-icon>
-              <ion-icon slot="end" name="chevron-up" *ngIf="p.open" class="submenu-indicator"></ion-icon>
-            </ion-item>
-            
-            <!-- Submenú (items secundarios) -->
-            <ion-list *ngIf="p.open && p.children" class="submenu-list">
-              <ion-item 
-                *ngFor="let sub of p.children" 
-                [routerLink]="[sub.url]" 
-                class="submenu-item">
-                <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                <ion-label>{{ sub.title }}</ion-label>
+
+            <!-- Opción SIN submenú -->
+            <ion-menu-toggle auto-hide="true" *ngIf="!p.children && !p.categories && !p.tags">
+              <ion-item [routerLink]="[p.url]" detail="false">
+                <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
               </ion-item>
-            </ion-list>
+            </ion-menu-toggle>
+
+            <!-- Opción CON submenú usando ion-accordion -->
+            <ion-accordion-group expand="inset" multiple="true" *ngIf="p.children || p.categories || p.tags">
+              <ion-accordion [value]="p.title">
+                <ion-item slot="header">
+                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                  <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+
+                <ion-list slot="content" class="submenu-list">
+
+                <!-- Submenú Metodologías -->
+                <ng-container *ngIf="p.children">
+                  <ion-item *ngFor="let sub of p.children" [routerLink]="[sub.url]">
+                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                    <ion-label>{{ sub.title }}</ion-label>
+                  </ion-item>
+                </ng-container>
+
+                <!-- Submenú Categorías -->
+                <ng-container *ngIf="p.categories">
+                  <ion-item *ngFor="let sub of p.categories" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
+                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                    <ion-label>{{ sub.title }}</ion-label>
+                  </ion-item>
+                </ng-container>
+
+                <!-- Submenú Etiquetas -->
+                <ng-container *ngIf="p.tags">
+                  <ion-item *ngFor="let sub of p.tags" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
+                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                    <ion-label>{{ sub.title }}</ion-label>
+                  </ion-item>
+                </ng-container>
+
+                </ion-list>
+              </ion-accordion>
+            </ion-accordion-group>
+
           </ng-container>
-          
-          <!-- Botón para cerrar sesión -->
+
+          <!-- Botón Cerrar Sesión -->
           <ion-item button (click)="logout()" detail="false" class="logout-item">
             <ion-icon slot="start" name="log-out"></ion-icon>
             <ion-label>Cerrar Sesión</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
+
     </ion-menu>
-    
+
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

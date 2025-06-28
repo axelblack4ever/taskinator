@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons } from '@ionic/angular/standalone';
+import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons, IonAccordionGroup, IonAccordion } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   person, 
@@ -50,7 +50,9 @@ import { AuthService } from './services/auth.service';
     IonToolbar, 
     IonTitle, 
     IonMenuToggle,
-    IonButtons
+    IonButtons,
+    IonAccordionGroup, 
+    IonAccordion          
   ]
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -63,47 +65,56 @@ export class AppComponent implements OnInit, OnDestroy {
   chevronUpIcon = 'chevron-up';
   
   public appPages = [
-    { title: 'Perfil', url: '/tabs/profile', icon: 'person', open: false },
     { 
-      title: 'Metodologías', 
-      icon: 'albums', 
+      title: 'Perfil',
+      url: '/tabs/profile',
+      icon: 'person',
+      open: false
+    },
+    {
+      title: 'Metodologías',
+      icon: 'albums',
       open: false,
       children: [
         { title: 'Pomodoro', url: '/tabs/methodologies/pomodoro', icon: 'timer' },
         { title: '3/3/3', url: '/tabs/methodologies/three-three-three', icon: 'list' },
-        // MODIFICACION DE CODIGO
         { title: 'Eisenhower', url: '/tabs/methodologies/eisenhower', icon: 'grid' },
-        { title: 'Eat the Frog', url: '/tabs/methodologies/eat-frog', icon: 'alert-circle' },
-        // MODIFICACION DE CODIGO
+        { title: 'Eat the Frog', url: '/tabs/methodologies/eat-frog', icon: 'alert-circle' }
       ]
     },
-    { 
-      title: 'Categorías', 
-      icon: 'folder', 
+    {
+      title: 'Categorías',
+      icon: 'folder',
       open: false,
-      children: [
-        { title: 'Personal', url: '/tabs/categories/personal', icon: 'person' },
-        { title: 'Pareja', url: '/tabs/categories/partner', icon: 'heart' },
-        { title: 'Hijos', url: '/tabs/categories/children', icon: 'people' },
-        { title: 'Familia', url: '/tabs/categories/family', icon: 'people' },
-        { title: 'Amigos', url: '/tabs/categories/friends', icon: 'people' },
-        { title: 'Otros', url: '/tabs/categories/others', icon: 'folder-open' }
+      categories: [
+        { title: 'Personal', value: 1, type: 'category', icon: 'person' },
+        { title: 'Pareja', value: 2, type: 'category', icon: 'heart' },
+        { title: 'Hijos', value: 3, type: 'category', icon: 'people' },
+        { title: 'Familia', value: 4, type: 'category', icon: 'people' },
+        { title: 'Amigos', value: 5, type: 'category', icon: 'people' },
+        { title: 'Otros', value: 6, type: 'category', icon: 'folder-open' }
       ]
     },
-    { 
-      title: 'Etiquetas', 
-      icon: 'pricetag', 
+    {
+      title: 'Etiquetas',
+      icon: 'pricetag',
       open: false,
-      children: [
-        { title: 'Salud', url: '/tabs/tags/health', icon: 'heart' },
-        { title: 'Finanzas', url: '/tabs/tags/finances', icon: 'cash' },
-        { title: 'Relaciones personales', url: '/tabs/tags/relationships', icon: 'people' },
-        { title: 'Desarrollo personal', url: '/tabs/tags/personal-growth', icon: 'school' },
-        { title: 'Trabajo', url: '/tabs/tags/work', icon: 'briefcase' },
+      tags: [
+        { title: 'Salud', value: 1, type: 'tag', icon: 'heart' },
+        { title: 'Finanzas', value: 2, type: 'tag', icon: 'cash' },
+        { title: 'Relaciones personales', value: 3, type: 'tag', icon: 'people' },
+        { title: 'Desarrollo personal', value: 4, type: 'tag', icon: 'school' },
+        { title: 'Trabajo', value: 5, type: 'tag', icon: 'briefcase' }
       ]
     },
-    { title: 'Configuración', url: '/tabs/settings', icon: 'options', open: false }
+    {
+      title: 'Configuración',
+      url: '/tabs/settings',
+      icon: 'options',
+      open: false
+    }
   ];
+
   
   constructor(
     private router: Router,
@@ -164,6 +175,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleSection(p: any) {
     p.open = !p.open;
+      // console.log('Toggling section:', p.title, p.open);
+    this.appPages = [...this.appPages];
   }
   
   goToHome() {
