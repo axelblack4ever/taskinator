@@ -102,9 +102,9 @@ export class AppComponent implements OnInit, OnDestroy {
       tags: [
         { title: 'Salud', value: 1, type: 'tag', icon: 'heart' },
         { title: 'Finanzas', value: 2, type: 'tag', icon: 'cash' },
-        { title: 'Relaciones personales', value: 3, type: 'tag', icon: 'people' },
-        { title: 'Desarrollo personal', value: 4, type: 'tag', icon: 'school' },
-        { title: 'Trabajo', value: 5, type: 'tag', icon: 'briefcase' }
+        { title: 'Desarrollo personal', value: 3, type: 'tag', icon: 'school' },
+        { title: 'Trabajo', value: 4, type: 'tag', icon: 'briefcase' },
+        { title: 'Relaciones personales', value: 5, type: 'tag', icon: 'people' }
       ]
     },
     {

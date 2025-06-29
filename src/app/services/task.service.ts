@@ -423,26 +423,56 @@ export class TaskService {
   /**
    * Obtiene tareas por etiqueta
    */
-  async getTasksByTag(tag: string): Promise<Task[]> {
-    try {
-      // Buscar en el array JSONB de etiquetas
-      const { data, error } = await this.supabase.client
-        .from('tasks')
-        .select('*')
-        .contains('tags', [tag])
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      const appError = this.errorService.handleError(error, { 
-        operation: 'getTasksByTag',
-        tag
-      });
-      await this.errorService.showErrorMessage(appError);
-      throw appError;
+async getTasksByTag(tag: string | number): Promise<Task[]> {
+  // Detectar si es número (aunque venga como string)
+  //console.log('DEBUG getTasksByTag → tag ORIGINAL recibido:', tag);
+
+  const parsed = Number(tag);
+  //console.log('DEBUG getTasksByTag → parsed:', parsed);
+  let tagName: string;
+
+  if (!isNaN(parsed)) {
+    // Es un número válido, buscar nombre de la tag por ID
+    const { data: tagData, error: tagError } = await this.supabase.client
+      .from('tags')
+      .select('name')
+      .eq('id', parsed)
+      .single();
+
+    //console.log('DEBUG getTasksByTag → lookup tag id:', parsed);
+    //console.log('DEBUG getTasksByTag → tagData:', tagData);
+    //console.log('DEBUG getTasksByTag → tagError:', tagError);
+
+    if (tagError || !tagData) {
+      //console.error('ERROR getTasksByTag → no se encontró la tag:', tagError);
+      throw tagError || new Error('Tag no encontrada');
     }
+
+    tagName = tagData.name;
+  } else {
+    // No es número → usar directamente como nombre
+    tagName = tag as string;
   }
+
+  const jsonArray = `["${tagName}"]`;
+  //console.log('DEBUG getTasksByTag → filtro JSONB:', jsonArray);
+
+  const { data, error } = await this.supabase.client
+    .from('tasks')
+    .select('*')
+    .filter('tags', 'cs', jsonArray);
+
+  //console.log('DEBUG getTasksByTag → resultado data:', data);
+  //console.log('DEBUG getTasksByTag → resultado error:', error);
+
+  if (error) {
+    //console.error('ERROR getTasksByTag:', error);
+    throw error;
+  }
+
+  return data as Task[];
+}
+
 
   /**
    * Obtiene tareas por categoría y las agrupa en vencidas, pendientes y completadas
