@@ -441,8 +441,7 @@ async getTasksByTag(tag: string | number): Promise<Task[]> {
 
     //console.log('DEBUG getTasksByTag → lookup tag id:', parsed);
     //console.log('DEBUG getTasksByTag → tagData:', tagData);
-    //console.log('DEBUG getTasksByTag → tagError:', tagError);
-
+    //console.log('DEBUG getTask
     if (tagError || !tagData) {
       //console.error('ERROR getTasksByTag → no se encontró la tag:', tagError);
       throw tagError || new Error('Tag no encontrada');

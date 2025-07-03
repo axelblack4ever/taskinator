@@ -11,7 +11,7 @@
       <ion-content>
         <!-- Información del usuario -->
         <div class="user-info ion-padding">
-          <ion-item lines="none">
+          <ion-item lines="none" button (click)="goToProfile()">
             <ion-icon slot="start" name="person"></ion-icon>
             <ion-label>
               <h2>{{ userName || 'Alejandro Angel' }}</h2>
@@ -20,9 +20,9 @@
         </div>
 
         <ion-list>
+          <!-- Páginas dinámicas -->
           <ng-container *ngFor="let p of appPages">
-
-            <!-- Opción SIN submenú -->
+            <!-- SIN submenú -->
             <ion-menu-toggle auto-hide="true" *ngIf="!p.children && !p.categories && !p.tags">
               <ion-item [routerLink]="[p.url]" detail="false">
                 <ion-icon slot="start" [name]="p.icon"></ion-icon>
@@ -30,7 +30,7 @@
               </ion-item>
             </ion-menu-toggle>
 
-            <!-- Opción CON submenú usando ion-accordion -->
+            <!-- CON submenú -->
             <ion-accordion-group expand="inset" multiple="true" *ngIf="p.children || p.categories || p.tags">
               <ion-accordion [value]="p.title">
                 <ion-item slot="header">
@@ -39,36 +39,37 @@
                 </ion-item>
 
                 <ion-list slot="content" class="submenu-list">
+                  <!-- Submenús -->
+                  <ng-container *ngIf="p.children">
+                    <ion-item *ngFor="let sub of p.children" [routerLink]="[sub.url]">
+                      <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                      <ion-label>{{ sub.title }}</ion-label>
+                    </ion-item>
+                  </ng-container>
 
-                <!-- Submenú Metodologías -->
-                <ng-container *ngIf="p.children">
-                  <ion-item *ngFor="let sub of p.children" [routerLink]="[sub.url]">
-                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                    <ion-label>{{ sub.title }}</ion-label>
-                  </ion-item>
-                </ng-container>
+                  <ng-container *ngIf="p.categories">
+                    <ion-item *ngFor="let sub of p.categories" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
+                      <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                      <ion-label>{{ sub.title }}</ion-label>
+                    </ion-item>
+                  </ng-container>
 
-                <!-- Submenú Categorías -->
-                <ng-container *ngIf="p.categories">
-                  <ion-item *ngFor="let sub of p.categories" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
-                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                    <ion-label>{{ sub.title }}</ion-label>
-                  </ion-item>
-                </ng-container>
-
-                <!-- Submenú Etiquetas -->
-                <ng-container *ngIf="p.tags">
-                  <ion-item *ngFor="let sub of p.tags" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
-                    <ion-icon slot="start" [name]="sub.icon"></ion-icon>
-                    <ion-label>{{ sub.title }}</ion-label>
-                  </ion-item>
-                </ng-container>
-
+                  <ng-container *ngIf="p.tags">
+                    <ion-item *ngFor="let sub of p.tags" [routerLink]="['/tabs/tasks/group', sub.type, sub.value]">
+                      <ion-icon slot="start" [name]="sub.icon"></ion-icon>
+                      <ion-label>{{ sub.title }}</ion-label>
+                    </ion-item>
+                  </ng-container>
                 </ion-list>
               </ion-accordion>
             </ion-accordion-group>
-
           </ng-container>
+
+          <!-- Botón Configuración -->
+          <ion-item button (click)="goToSettings()" detail="false">
+            <ion-icon slot="start" name="settings"></ion-icon>
+            <ion-label>Configuración</ion-label>
+          </ion-item>
 
           <!-- Botón Cerrar Sesión -->
           <ion-item button (click)="logout()" detail="false" class="logout-item">
@@ -77,7 +78,6 @@
           </ion-item>
         </ion-list>
       </ion-content>
-
     </ion-menu>
 
     <ion-router-outlet id="main-content"></ion-router-outlet>

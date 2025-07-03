@@ -1,8 +1,11 @@
-// src/app/app.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons, IonAccordionGroup, IonAccordion } from '@ionic/angular/standalone';
+import { 
+  IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, 
+  IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons, 
+  IonAccordionGroup, IonAccordion 
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   person, 
@@ -21,11 +24,9 @@ import {
   school,         
   briefcase,      
   logOut,
-  // Importar los iconos de chevron exactamente como se nombran en Ionicons
   chevronDown,
   chevronUp,
-  albums 
-} from 'ionicons/icons';
+  albums, settings } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
 
@@ -60,7 +61,6 @@ export class AppComponent implements OnInit, OnDestroy {
   userName = '';
   private subscriptions: Subscription[] = [];
   
-  // Definir iconos como propiedades para usar en la plantilla
   chevronDownIcon = 'chevron-down';
   chevronUpIcon = 'chevron-up';
   
@@ -106,57 +106,27 @@ export class AppComponent implements OnInit, OnDestroy {
         { title: 'Trabajo', value: 4, type: 'tag', icon: 'briefcase' },
         { title: 'Relaciones personales', value: 5, type: 'tag', icon: 'people' }
       ]
-    },
-    {
-      title: 'Configuración',
-      url: '/tabs/settings',
-      icon: 'options',
-      open: false
     }
+    // Nota: He quitado Configuración de aquí para usar solo el botón fijo.
   ];
 
-  
   constructor(
     private router: Router,
     private authService: AuthService
   ) {
-    // Registrar todos los iconos necesarios
-    addIcons({ 
-      person, 
-      options, 
-      list, 
-      calendar, 
-      timer, 
-      grid, 
-      alertCircle,
-      pricetag,
-      folder,
-      folderOpen,
-      heart,
-      cash,
-      people,
-      school,
-      briefcase,
-      logOut,
-      chevronDown,
-      chevronUp,
-      albums
-    });
+    addIcons({person,settings,logOut,options,list,calendar,timer,grid,alertCircle,pricetag,folder,folderOpen,heart,cash,people,school,briefcase,chevronDown,chevronUp,albums});
     
-    // Verificar que los iconos estén cargados
     console.log('Iconos registrados:', 
       {chevronDown: !!chevronDown, chevronUp: !!chevronUp});
   }
 
   ngOnInit() {
-    // Suscribirse al estado de autenticación
     this.subscriptions.push(
       this.authService.isAuthenticated().subscribe(isAuth => {
         this.isAuthenticated = isAuth;
       })
     );
 
-    // Obtener datos del usuario
     this.subscriptions.push(
       this.authService.currentUser$.subscribe(user => {
         if (user && user.user_metadata) {
@@ -169,18 +139,24 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Limpiar suscripciones
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   toggleSection(p: any) {
     p.open = !p.open;
-      // console.log('Toggling section:', p.title, p.open);
     this.appPages = [...this.appPages];
   }
   
   goToHome() {
     this.router.navigateByUrl('/tabs/today');
+  }
+
+  goToProfile() {
+    this.router.navigateByUrl('/profile');
+  }
+
+  goToSettings() {
+    this.router.navigateByUrl('/tabs/settings');
   }
 
   async logout() {
