@@ -5,9 +5,6 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { 
   IonContent, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
   IonItem, 
   IonLabel, 
   IonInput, 
@@ -18,8 +15,6 @@ import {
   IonCardContent,
   IonSpinner,
   IonNote,
-  IonRow,
-  IonCol,
   ToastController
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
@@ -34,9 +29,6 @@ import { AuthService } from '../services/auth.service';
     FormsModule, 
     ReactiveFormsModule,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonItem,
     IonLabel,
     IonInput,
@@ -47,8 +39,6 @@ import { AuthService } from '../services/auth.service';
     IonCardContent,
     IonSpinner,
     IonNote,
-    IonRow,
-    IonCol
   ]
 })
 export class LoginPage implements OnInit {

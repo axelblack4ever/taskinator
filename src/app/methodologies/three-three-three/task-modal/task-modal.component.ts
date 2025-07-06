@@ -12,7 +12,6 @@ import {
   IonIcon,
   IonChip,
   IonLabel,
-  IonBadge,
   IonItem,
   IonList,
   IonFooter
@@ -44,7 +43,6 @@ import { TaskDetailResponse, TaskType } from '../../../models/task.model';
     IonIcon,
     IonChip,
     IonLabel,
-    IonBadge,
     IonItem,
     IonList,
     IonFooter

@@ -3,7 +3,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { 
   IonContent, 
   IonHeader, 
@@ -20,13 +19,7 @@ import {
   IonCardContent,
   IonIcon,
   IonButton,
-  IonPopover,
-  IonModal,
   IonSpinner,
-  IonBadge,
-  IonChip,
-  IonLabel,
-  IonText,
   ModalController,
   ToastController,
   AlertController
@@ -56,7 +49,6 @@ import { TaskDetailResponse } from '../../models/task.model';
   imports: [
     CommonModule, 
     FormsModule,
-    RouterLink,
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -72,13 +64,7 @@ import { TaskDetailResponse } from '../../models/task.model';
     IonCardContent,
     IonIcon,
     IonButton,
-    IonPopover,
-    IonModal,
     IonSpinner,
-    IonBadge,
-    IonChip,
-    IonLabel,
-    IonText,
     QuadrantInfoComponent,
     TaskDetailComponent
   ]

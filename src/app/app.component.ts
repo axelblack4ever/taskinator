@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { 
   IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonItem, IonIcon, IonLabel, 
-  IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle, IonButtons, 
+  IonRouterOutlet, IonHeader, IonToolbar, IonTitle, IonMenuToggle,
   IonAccordionGroup, IonAccordion 
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -51,7 +51,6 @@ import { AuthService } from './services/auth.service';
     IonToolbar, 
     IonTitle, 
     IonMenuToggle,
-    IonButtons,
     IonAccordionGroup, 
     IonAccordion          
   ]

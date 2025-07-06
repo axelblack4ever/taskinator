@@ -16,7 +16,6 @@ import {
   IonModal,
   ModalController
 } from '@ionic/angular/standalone';
-import { TaskCardComponent } from './task-card/task-card.component';
 import { TaskModalComponent } from './task-modal/task-modal.component';
 import { TaskSwapModalComponent } from './task-swap-modal/task-swap-modal.component';
 import { SectionHeaderComponent } from './section-header/section-header.component';
@@ -43,7 +42,6 @@ import { SupabaseService } from '../../services/supabase.service';
     IonCol,
     IonSpinner,
     IonModal,
-    TaskCardComponent,
     TaskModalComponent,
     TaskSwapModalComponent,
     SectionHeaderComponent,

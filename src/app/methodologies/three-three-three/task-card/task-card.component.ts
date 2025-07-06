@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import {
   IonCard,
   IonCardContent,
-  IonItem,
   IonLabel,
   IonIcon,
   IonBadge,
@@ -32,7 +31,6 @@ import { TaskDetailResponse, TaskType } from '../../../models/task.model';
     CommonModule,
     IonCard,
     IonCardContent,
-    IonItem,
     IonLabel,
     IonIcon,
     IonBadge,

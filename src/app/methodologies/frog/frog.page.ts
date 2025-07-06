@@ -13,7 +13,6 @@ import {
   IonButton,
   IonIcon,
   IonAlert,
-  IonModal,
   IonPopover,
   ModalController
 } from '@ionic/angular/standalone';
@@ -41,7 +40,6 @@ import { TaskDetailResponse } from '../../models/task.model';
     IonButton,
     IonIcon,
     IonAlert,
-    IonModal,
     IonPopover
   ]
 })

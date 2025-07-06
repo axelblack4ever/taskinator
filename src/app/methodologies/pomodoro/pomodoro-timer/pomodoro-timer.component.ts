@@ -10,7 +10,6 @@ import {
   IonButton,
   IonIcon,
   IonLabel,
-  IonText,
   IonChip
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -38,7 +37,6 @@ import { PomodoroService, PomodoroState, PomodoroStatus } from 'src/app/services
     IonButton,
     IonIcon,
     IonLabel,
-    IonText,
     IonChip
   ]
 })

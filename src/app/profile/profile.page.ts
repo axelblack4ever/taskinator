@@ -20,8 +20,7 @@ import {
   IonIcon,
   IonSpinner,
   ToastController,
-  IonList,
-  IonAvatar
+  IonList
 } from '@ionic/angular/standalone';
 import { AuthService, AuthUser } from '../services/auth.service';
 import { Subscription } from 'rxjs';
@@ -51,8 +50,7 @@ import { Subscription } from 'rxjs';
     IonButton,
     IonIcon,
     IonSpinner,
-    IonList,
-    IonAvatar
+    IonList
   ]
 })
 export class ProfilePage implements OnInit, OnDestroy {

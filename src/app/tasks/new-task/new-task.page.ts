@@ -124,11 +124,11 @@ export class NewTaskPage implements OnInit {
 
   // Etiquetas disponibles
   availableTags = [
-    { value: 'health', label: 'Salud' },
-    { value: 'finances', label: 'Finanzas' },
-    { value: 'relationships', label: 'Relaciones personales' },
-    { value: 'personal_growth', label: 'Desarrollo personal' },
-    { value: 'work', label: 'Trabajo' }
+    { value: 'salud', label: 'Salud' },
+    { value: 'finanzas', label: 'Finanzas' },
+    { value: 'relaciones', label: 'Relaciones personales' },
+    { value: 'desarrollo_personal', label: 'Desarrollo personal' },
+    { value: 'trabajo', label: 'Trabajo' }
   ];
   
   isLoading = false;

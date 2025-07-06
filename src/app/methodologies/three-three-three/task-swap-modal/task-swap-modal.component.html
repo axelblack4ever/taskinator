@@ -66,8 +66,8 @@
               button 
               (click)="onSelectTask(task)" 
               [class.overdue-item]="isOverdue(task)">
-      <ion-icon [name]="task.task_type ? (taskTypesMap[task.task_type!]?.icon || 'business') : 'business'" 
-                [color]="task.task_type ? (taskTypesMap[task.task_type!]?.color || 'primary') : 'primary'"
+      <ion-icon [name]="task.task_type ? (taskTypesMap[task.task_type!].icon || 'business') : 'business'" 
+                [color]="task.task_type ? (taskTypesMap[task.task_type!].color || 'primary') : 'primary'"
                 slot="start">
       </ion-icon>
       

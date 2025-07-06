@@ -16,7 +16,6 @@ import {
   IonBadge,
   IonSearchbar,
   IonSpinner,
-  IonChip,
   IonListHeader
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
@@ -55,7 +54,6 @@ import { TaskDetailResponse, TaskType } from '../../../models/task.model';
     IonBadge,
     IonSearchbar,
     IonSpinner,
-    IonChip,
     IonListHeader
   ]
 })

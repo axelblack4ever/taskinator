@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import { IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { TaskDetailResponse } from '../../../models/task.model';
 import { FormsModule } from '@angular/forms';
 
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './task-section.component.html',
   styleUrls: ['./task-section.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonIcon, IonSelect, IonSelectOption, FormsModule]
+  imports: [CommonModule, IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, IonSelect, IonSelectOption, FormsModule]
 })
 export class TaskSectionComponent {
   @Input() title = '';
