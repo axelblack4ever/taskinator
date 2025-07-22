@@ -4,10 +4,73 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Ajustes</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <!-- Preferencias sensoriales -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Preferencias sensoriales</ion-label>
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Sonidos</ion-label>
+      <ion-toggle slot="end" [(ngModel)]="sonidosActivados"></ion-toggle>
+    </ion-item>
+
+    <ion-item *ngIf="sonidosActivados">
+      <ion-label>Sonido al completar tarea</ion-label>
+      <ion-select interface="popover" [(ngModel)]="sonidoAlCompletar">
+        <ion-select-option value="campanilla">Campanilla</ion-select-option>
+        <ion-select-option value="eco">Eco digital</ion-select-option>
+        <ion-select-option value="timbre">Timbre suave</ion-select-option>
+        <ion-select-option value="silencio">Silencio</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Notificaciones</ion-label>
+      <ion-toggle slot="end" [(ngModel)]="notificacionesActivadas"></ion-toggle>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Vibración</ion-label>
+      <ion-toggle slot="end" [(ngModel)]="vibracionActivada"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <!-- Modo visual -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Tema de la app</ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label>Tema</ion-label>
+      <ion-select interface="popover" [(ngModel)]="tema">
+        <ion-select-option value="claro">Claro</ion-select-option>
+        <ion-select-option value="oscuro">Oscuro</ion-select-option>
+        <ion-select-option value="cyberpunk">Cyberpunk</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <!-- Comportamiento del botón Métodos -->
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Comportamiento del botón “Métodos”</ion-label>
+    </ion-list-header>
+    <ion-item>
+      <ion-label>Acción al pulsar</ion-label>
+      <ion-select interface="popover" [(ngModel)]="comportamientoMetodos">
+        <ion-select-option value="lista">Mostrar lista de metodologías</ion-select-option>
+        <ion-select-option value="ultimo">Abrir el último método usado</ion-select-option>
+        <ion-select-option value="mas-usado">Abrir el más utilizado (Premium)</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+    
 </ion-content>

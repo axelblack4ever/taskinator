@@ -14,14 +14,14 @@
 
   <ion-card>
     <ion-card-header class="ion-text-center">
-      <ion-card-title>Total Tasks</ion-card-title>
+      <ion-card-title>Total de tareas</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col class="ion-text-center"><strong>Historical</strong></ion-col>
-          <ion-col class="ion-text-center"><strong>Pending</strong></ion-col>
-          <ion-col class="ion-text-center"><strong>Completed</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Histórico</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Pendientes</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Completadas</strong></ion-col>
         </ion-row>
         <ion-row>
           <ion-col class="ion-text-center">{{ totalTasks }}</ion-col>
@@ -34,7 +34,7 @@
 
   <ion-card>
     <ion-card-header class="ion-text-center">
-      <ion-card-title>Tasks Completed per Week</ion-card-title>
+      <ion-card-title>Tareas completadas por semana</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
@@ -51,14 +51,14 @@
 
   <ion-card>
     <ion-card-header class="ion-text-center">
-      <ion-card-title>Tasks by Category</ion-card-title>
+      <ion-card-title>Tareas según categorías</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-grid>
         <ion-row>
           <ion-col></ion-col>
-          <ion-col class="ion-text-center"><strong>Pending</strong></ion-col>
-          <ion-col class="ion-text-center"><strong>Historical</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Pendientes</strong></ion-col>
+          <ion-col class="ion-text-center"><strong>Total</strong></ion-col>
         </ion-row>
         <ion-row *ngFor="let c of categoryStats">
           <ion-col>{{ c.name || 'Sin categoría' }}</ion-col>

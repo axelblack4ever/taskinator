@@ -1,7 +1,7 @@
 # Taskinator
 
 ## Descripción
-Aplicación Angular con Ionic que gestiona tareas y metodologías de productividad. Utiliza Supabase como backend para autenticación y almacenamiento de datos.
+Aplicación Angular con Ionic que gestiona tareas y metodologías de productividad. Utiliza Supabase como backend para autenticación y almacenamiento de datos. Versión **1.0.0** – 29/07/2025.
 
 ## Funcionalidades actuales
 - Registro, inicio y cierre de sesión con Supabase
@@ -14,6 +14,11 @@ Aplicación Angular con Ionic que gestiona tareas y metodologías de productivid
 - Página de estadísticas con gráficas básicas
 - Gestión de perfil de usuario
 - Filtro de tareas por estado (hoy, vencidas, completadas)
+- Búsqueda de tareas por título o descripción
+- Etiquetas personalizadas para organizar tareas
+- Vista agrupada por categoría o etiqueta con menú lateral dinámico
+- Clasificación de tareas por tipo (Trabajo profundo, Impulso y Mantenimiento)
+- Selección automática de la tarea prioritaria para el Pomodoro
 
 ## Estructura del proyecto
 ```
