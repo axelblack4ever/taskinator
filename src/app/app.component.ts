@@ -29,6 +29,7 @@ import {
   albums, settings } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -111,7 +112,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private settingsService: SettingsService
   ) {
     addIcons({person,settings,logOut,options,list,calendar,timer,grid,alertCircle,pricetag,folder,folderOpen,heart,cash,people,school,briefcase,chevronDown,chevronUp,albums});
     
