@@ -1,6 +1,6 @@
 // src/app/services/settings.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SupabaseService } from './supabase.service';
 import { ErrorService } from './error.service';
@@ -10,8 +10,8 @@ import { UserSettings, UpdateUserSettingsRequest } from '../models/user-settings
   providedIn: 'root'
 })
 export class SettingsService {
-  private _settings = new BehaviorSubject<UserSettings | null>(null);
-  private _loading = new BehaviorSubject<boolean>(false);
+  private _settings = new ReplaySubject<UserSettings>(1);
+  private _loading = new ReplaySubject<boolean>(1);
 
   constructor(
     private supabase: SupabaseService,
@@ -19,7 +19,7 @@ export class SettingsService {
   ) {}
 
   /** Observable con la configuración completa */
-  get settings$(): Observable<UserSettings | null> {
+  get settings$(): Observable<UserSettings> {
     return this._settings.asObservable();
   }
 
@@ -64,8 +64,7 @@ export class SettingsService {
       const { data: { session } } = await this.supabase.client.auth.getSession();
       const userId = session?.user?.id;
       if (!userId) {
-        this._settings.next(null);
-        return;
+        throw new Error('Usuario no autenticado');
       }
 
       const { data, error } = await this.supabase.client
@@ -105,7 +104,7 @@ export class SettingsService {
 
       const defaultSettings: UserSettings = {
         user_id: userId,
-        language: 'es',
+        language: 'es', // Español (ISO 639-1)
         sounds_enabled: false,
         sound_choice: 'campanilla',
         notifications_enabled: false,
@@ -129,12 +128,12 @@ export class SettingsService {
   async updateSettings(updates: UpdateUserSettingsRequest): Promise<void> {
     this._loading.next(true);
     try {
-      const current = this._settings.getValue();
-      if (!current?.id) {
+      const current = await this._settings.toPromise();
+      if (!current?.user_id) {
         throw new Error('No se ha cargado la configuración');
       }
 
-      const updated = await this.supabase.update('user_settings', current.id, updates);
+      const updated = await this.supabase.update('user_settings', current.user_id, updates);
       this._settings.next({ ...current, ...updated });
     } catch (error) {
       const appError = this.errorService.handleError(error, { operation: 'updateSettings' });

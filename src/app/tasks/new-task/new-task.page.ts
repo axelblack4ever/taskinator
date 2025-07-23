@@ -1,4 +1,9 @@
 // src/app/tasks/new-task/new-task.page.ts
+// Importaciones para manejar la gestión de efectos
+import { SettingsService } from 'src/app/services/settings.service';
+import { triggerCompletionEffects } from 'src/app/utils/effects';
+import { firstValueFrom } from 'rxjs';
+// Rest de importaciones necesarias
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -138,7 +143,8 @@ export class NewTaskPage implements OnInit {
   constructor(
     private router: Router,
     private taskService: TaskService,
-    private errorService: ErrorService
+    private errorService: ErrorService,
+    private settings: SettingsService
   ) {
     addIcons({
       calendar,
@@ -181,7 +187,10 @@ export class NewTaskPage implements OnInit {
       };
       
       // Guardar la tarea utilizando el servicio
+
       const createdTask = await this.taskService.createTask(taskRequest);
+      const currentSettings = await firstValueFrom(this.settings.settings$);
+      triggerCompletionEffects(currentSettings);
       
       this.toastMessage = 'Tarea creada correctamente';
       this.showToast = true;

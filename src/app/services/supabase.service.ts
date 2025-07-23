@@ -123,7 +123,7 @@ export class SupabaseService {
    * @param updates Datos a actualizar
    * @returns Promesa con el registro actualizado
    */
-  async update(table: string, id: number, updates: any): Promise<any> {
+  async update(table: string, id: string | number, updates: any): Promise<any> {
     try {
       const { data, error } = await this.supabase
         .from(table)
