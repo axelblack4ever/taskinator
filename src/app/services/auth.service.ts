@@ -85,45 +85,55 @@ export class AuthService {
     }
   }
   
-  /**
-   * Registra un nuevo usuario con email y contraseña
-   */
-  async signUp(email: string, password: string, name?: string): Promise<AuthResponse> {
-    try {
-      this._authLoading.next(true);
-      const { data, error } = await this.supabase.client.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name: name || email.split('@')[0] // Usar nombre o primera parte del email
-          }
+/**
+ * Registra un nuevo usuario con email y contraseña
+ */
+async signUp(email: string, password: string, name?: string): Promise<AuthResponse> {
+  try {
+    this._authLoading.next(true);
+
+    const { data, error } = await this.supabase.client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name || email.split('@')[0] // Usar nombre o primera parte del email
         }
+      }
+    });
+
+    if (error) throw error;
+
+    // ✅ Crear configuración por defecto en user_settings
+    if (data.user?.id) {
+      await this.supabase.client.rpc('create_user_settings', {
+        user_uuid: data.user.id
       });
-      
-      if (error) throw error;
-      
-      return {
-        session: data.session ? { ...data.session, expires_at: data.session.expires_at ?? 0 } : null,
-        user: data.user,
-        error: null
-      };
-    } catch (error) {
-      const appError = this.errorService.handleError(error, { 
-        operation: 'signUp',
-        email,
-        name
-      });
-      
-      return {
-        session: null,
-        user: null,
-        error: appError
-      };
-    } finally {
-      this._authLoading.next(false);
     }
+
+    return {
+      session: data.session ? { ...data.session, expires_at: data.session.expires_at ?? 0 } : null,
+      user: data.user,
+      error: null
+    };
+
+  } catch (error) {
+    const appError = this.errorService.handleError(error, {
+      operation: 'signUp',
+      email,
+      name
+    });
+
+    return {
+      session: null,
+      user: null,
+      error: appError
+    };
+  } finally {
+    this._authLoading.next(false);
   }
+}
+
   
   /**
    * Inicia sesión con email y contraseña

@@ -190,8 +190,11 @@ export class NewTaskPage implements OnInit {
 
       const createdTask = await this.taskService.createTask(taskRequest);
       const currentSettings = await firstValueFrom(this.settings.settings$);
-      triggerCompletionEffects(currentSettings);
-      
+      if (currentSettings) {
+        triggerCompletionEffects(currentSettings);
+      }
+
+      //console.log('Tarea creada:', createdTask);  
       this.toastMessage = 'Tarea creada correctamente';
       this.showToast = true;
       

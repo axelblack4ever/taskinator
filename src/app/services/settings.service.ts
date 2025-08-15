@@ -1,6 +1,7 @@
 // src/app/services/settings.service.ts
+
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SupabaseService } from './supabase.service';
 import { ErrorService } from './error.service';
@@ -10,8 +11,8 @@ import { UserSettings, UpdateUserSettingsRequest } from '../models/user-settings
   providedIn: 'root'
 })
 export class SettingsService {
-  private _settings = new ReplaySubject<UserSettings>(1);
-  private _loading = new ReplaySubject<boolean>(1);
+  private _settings = new BehaviorSubject<UserSettings | null>(null);
+  private _loading = new BehaviorSubject<boolean>(false);
 
   constructor(
     private supabase: SupabaseService,
@@ -19,13 +20,18 @@ export class SettingsService {
   ) {}
 
   /** Observable con la configuración completa */
-  get settings$(): Observable<UserSettings> {
+  get settings$(): Observable<UserSettings | null> {
     return this._settings.asObservable();
   }
 
   /** Observable para conocer si está cargando */
   get loading$(): Observable<boolean> {
     return this._loading.asObservable();
+  }
+
+  /** Devuelve el valor actual (puede ser null) */
+  get current(): UserSettings | null {
+    return this._settings.getValue();
   }
 
   /** Getters individuales usando map */
@@ -64,7 +70,8 @@ export class SettingsService {
       const { data: { session } } = await this.supabase.client.auth.getSession();
       const userId = session?.user?.id;
       if (!userId) {
-        throw new Error('Usuario no autenticado');
+        this._settings.next(null);
+        return;
       }
 
       const { data, error } = await this.supabase.client
@@ -75,7 +82,6 @@ export class SettingsService {
 
       if (error) {
         if (error.code === 'PGRST116' || error.message?.includes('Row not found')) {
-          // No existe registro, inicializar
           await this.initializeDefaults();
           return;
         }
@@ -86,7 +92,7 @@ export class SettingsService {
     } catch (error) {
       const appError = this.errorService.handleError(error, { operation: 'loadSettings' });
       await this.errorService.showErrorMessage(appError);
-      throw appError;
+      this._settings.next(null);
     } finally {
       this._loading.next(false);
     }
@@ -104,7 +110,7 @@ export class SettingsService {
 
       const defaultSettings: UserSettings = {
         user_id: userId,
-        language: 'es', // Español (ISO 639-1)
+        language: 'es',
         sounds_enabled: false,
         sound_choice: 'campanilla',
         notifications_enabled: false,
@@ -128,12 +134,12 @@ export class SettingsService {
   async updateSettings(updates: UpdateUserSettingsRequest): Promise<void> {
     this._loading.next(true);
     try {
-      const current = await this._settings.toPromise();
+      const current = this._settings.getValue();
       if (!current?.user_id) {
-        throw new Error('No se ha cargado la configuración');
+        throw new Error('Configuración no cargada');
       }
 
-      const updated = await this.supabase.update('user_settings', current.user_id, updates);
+      const updated = await this.supabase.updateSettings(current.user_id, updates);
       this._settings.next({ ...current, ...updated });
     } catch (error) {
       const appError = this.errorService.handleError(error, { operation: 'updateSettings' });

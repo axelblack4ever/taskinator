@@ -148,6 +148,37 @@ export class SupabaseService {
   }
 
   /**
+   * Actualiza la configuración de usuario en la tabla user_settings
+   * @param userId ID del usuario (clave primaria)
+   * @param updates Objeto con los campos a actualizar
+   * @returns Promesa con el registro actualizado
+   */
+  async updateSettings(userId: string, updates: any): Promise<any> {
+    try {
+      const { data, error } = await this.supabase
+        .from('user_settings')
+        .update(updates)
+        .eq('user_id', userId)
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      return data[0];
+    } catch (error) {
+      const appError = this.errorService.handleError(error, {
+        operation: 'updateSettings',
+        table: 'user_settings',
+        user_id: userId,
+        updates
+      });
+      throw appError;
+    }
+  }
+
+
+  /**
    * Elimina un registro de la tabla especificada
    * @param table Nombre de la tabla
    * @param id ID del registro a eliminar

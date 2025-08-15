@@ -121,7 +121,7 @@ export class AppComponent implements OnInit, OnDestroy {
       {chevronDown: !!chevronDown, chevronUp: !!chevronUp});
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.subscriptions.push(
       this.authService.isAuthenticated().subscribe(isAuth => {
         this.isAuthenticated = isAuth;
@@ -137,6 +137,34 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    await this.settingsService.loadSettings();
+    // Suscripción al tema visual para aplicar dinámicamente la clase correspondiente
+    this.subscriptions.push(
+      this.settingsService.theme$.subscribe(theme => this.applyTheme(theme))
+    );    
+  }
+
+  /**
+   * Aplica el tema visual al elemento <body> en función de la configuración del usuario.
+   * Se eliminan las clases previas antes de aplicar la nueva.
+   * @param theme Nombre del tema: 'claro', 'oscuro' o 'cyberpunk'
+   */
+  private applyTheme(theme: string | undefined) {
+    document.body.classList.remove('theme-light', 'theme-dark', 'theme-cyberpunk');
+
+    switch (theme) {
+      case 'oscuro':
+        document.body.classList.add('theme-dark');
+        break;
+      case 'cyberpunk':
+        document.body.classList.add('theme-cyberpunk');
+        break;
+      case 'claro':
+      default:
+        document.body.classList.add('theme-light');
+        break;
+    }
   }
 
   ngOnDestroy() {
